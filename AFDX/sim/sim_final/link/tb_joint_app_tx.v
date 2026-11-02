@@ -260,35 +260,56 @@ module tb_joint_app_tx;                                     // 声明模块及�
         @(posedge clk); cfg_wr_en <= 1'b0;                  // 撤销
         repeat (6) @(posedge clk);                          // 等 cfg_done
 
-        $display("=== 超过 Lmax 的帧不发送 ===");            // 用例标题
+        $display("=== 超过 Lmax 的消息分片发送 ===");        // 用例标题
+        // Lmax=16 → 每片最多 16-43<0，取缺省对齐值 15 字节；20 字节消息 = 15 + 5 两片
         app_write_frame(4'd6, 20, 8'h00);                   // 写 20 字节 > Lmax(16)
         @(posedge clk); app_tx_req <= 1'b1;                 // 发送请求
         @(posedge clk); app_tx_req <= 1'b0;                 // 撤销
-        repeat (200) @(posedge clk);                        // 等判决
-        if (tx_frames == 0) $display("  [PASS] over-Lmax frame dropped"); // 未发送
-        else do_fail("over-Lmax frame transmitted");        // 失败
-        if (txerr_cnt > 0) $display("  [PASS] tx error counted"); // 错误计数
-        else do_fail("no tx error counted");                // 失败
+        waited = 0;                                         // 清等待计数
+        while ((tx_frames < 1) && (waited < (BAG_CYCLES + 20000))) begin  // 等第一片（限时）
+            @(posedge clk); waited = waited + 1;            // 等采样沿并计数
+        end                                                 // 等待结束
+        repeat (4) @(posedge clk);                          // 等采集稳定
+        if ((tx_frames >= 1) && ((tx_end[0] - tx_start[0] + 1) == 64) &&  // 第一片帧长
+            (tx_mem[tx_start[0]+20] == 8'h20) && (tx_mem[tx_start[0]+21] == 8'h00))  // MF=1、片偏移 0
+            $display("  [PASS] fragment 0 sent (MF=1, offset 0)");  // 通过
+        else do_fail("fragment 0 missing or header wrong");  // 失败
+        if ((tx_mem[tx_start[0]+42] == 8'h00) && (tx_mem[tx_start[0]+56] == 8'h0E))  // 首片 15 字节：0x00..0x0E
+            $display("  [PASS] fragment 0 payload");        // 通过
+        else do_fail("fragment 0 payload");                 // 失败
+        waited = 0;                                         // 清等待计数
+        while ((tx_frames < 2) && (waited < (2*BAG_CYCLES + 20000))) begin  // 等第二片（限时）
+            @(posedge clk); waited = waited + 1;            // 等采样沿并计数
+        end                                                 // 等待结束
+        repeat (4) @(posedge clk);                          // 等采集稳定
+        if ((tx_frames >= 2) && (tx_mem[tx_start[1]+20] == 8'h00) && (tx_mem[tx_start[1]+21] == 8'h03))  // 末片：偏移 3×8=24，MF=0
+            $display("  [PASS] fragment 1 sent (offset 24, MF=0)");  // 通过
+        else do_fail("fragment 1 header wrong");            // 失败
+        if (tx_mem[tx_start[1]+42] == 8'h0F)                 // 末片首字节应是消息第 15 字节
+            $display("  [PASS] fragment 1 payload continues");  // 通过
+        else do_fail("fragment 1 payload wrong");            // 失败
+        if (txerr_cnt == 0) $display("  [PASS] fragmentation not counted as error");  // 分片不算错误
+        else do_fail("fragmentation counted as error");      // 失败
 
         $display("=== 应用发送第一帧 ===");                  // 用例标题
         app_write_frame(4'd4, 17, 8'h00);                   // 写 17 字节
         @(posedge clk); app_tx_req <= 1'b1;                 // 发送请求
         @(posedge clk); app_tx_req <= 1'b0;                 // 撤销
-        wait (tx_frames >= 1);                              // 等第一帧
+        wait (tx_frames >= 3);                              // 等第三帧（前两帧是分片）
         repeat (4) @(posedge clk);                          // 等采集稳定
-        check_frame(0, 64, 8'd0, 8'h00);                    // 检查第一帧
+        check_frame(2, 64, 8'd0, 8'h00);                    // 检查第三帧
 
         $display("=== 应用发送第二帧（SN 递增 + BAG） ==="); // 用例标题
         app_write_frame(4'd4, 17, 8'h40);                   // 写 17 字节（基值 0x40）
         @(posedge clk); app_tx_req <= 1'b1;                 // 发送请求
         @(posedge clk); app_tx_req <= 1'b0;                 // 撤销
-        wait (tx_frames >= 2);                              // 等第二帧
+        wait (tx_frames >= 4);                              // 等第四帧
         repeat (4) @(posedge clk);                          // 等采集稳定
-        check_frame(1, 64, 8'd1, 8'h40);                    // 检查第二帧
-        if ((tx_cyc[1] - tx_cyc[0]) >= (BAG_CYCLES - 400)) // BAG 间隔约 1ms
-            $display("  [PASS] BAG ~1ms (%0d cycles)", tx_cyc[1]-tx_cyc[0]); // 通过
+        check_frame(3, 64, 8'd1, 8'h40);                    // 检查第四帧
+        if ((tx_cyc[3] - tx_cyc[2]) >= (BAG_CYCLES - 400)) // BAG 间隔约 1ms
+            $display("  [PASS] BAG ~1ms (%0d cycles)", tx_cyc[3]-tx_cyc[2]); // 通过
         else begin                                          // 失败
-            $display("  [FAIL] BAG interval too short (%0d cycles)", tx_cyc[1]-tx_cyc[0]); // 打印
+            $display("  [FAIL] BAG interval too short (%0d cycles)", tx_cyc[3]-tx_cyc[2]); // 打印
             fail_cnt = fail_cnt + 1;                        // 失败计数
         end                                                 // 失败结束
 
@@ -296,25 +317,25 @@ module tb_joint_app_tx;                                     // 声明模块及�
         @(posedge clk); app_tx_req <= 1'b1;                 // 只发请求
         @(posedge clk); app_tx_req <= 1'b0;                 // 撤销
         repeat (BAG_CYCLES + 5000) @(posedge clk);          // 等一个 BAG 周期
-        if (tx_frames == 2) $display("  [PASS] no duplicate frame"); // 无重复
+        if (tx_frames == 4) $display("  [PASS] no duplicate frame"); // 无重复
         else begin                                          // 重复发送
             $display("  [FAIL] duplicate frame sent (frames=%0d)", tx_frames); // 打印
             fail_cnt = fail_cnt + 1;                        // 失败计数
         end                                                 // 失败结束
 
-        $display("=== 超长丢弃后槽位可重新使用 ===");        // 用例标题
-        app_write_byte(4'd6, 11'd0, 8'h55);                 // 丢弃后该槽位应已释放：写 1 字节要立刻拿到授权
+        $display("=== 超长分片后槽位可重新使用 ===");        // 用例标题
+        app_write_byte(4'd6, 11'd0, 8'h55);                 // 分片发完后该槽位应已释放：写 1 字节要立刻拿到授权
         @(posedge clk); app_tx_req <= 1'b1;                 // 发送请求
         @(posedge clk); app_tx_req <= 1'b0;                 // 撤销
         waited = 0;                                         // 清等待计数
-        while ((tx_frames < 3) && (waited < (BAG_CYCLES + 20000))) begin  // 等第三帧发出（限时）
+        while ((tx_frames < 5) && (waited < (BAG_CYCLES + 20000))) begin  // 等第五帧发出（限时）
             @(posedge clk);                                 // 等采样沿
             waited = waited + 1;                            // 计数
         end                                                 // 等待结束
         repeat (4) @(posedge clk);                          // 等采集稳定
-        if ((tx_frames == 3) && (tx_mem[tx_start[2]+4] == 8'h00) &&  // 槽位 6 的帧发出
-            (tx_mem[tx_start[2]+5] == 8'h06) && (tx_mem[tx_start[2]+42] == 8'h55))  // VLID 与载荷
-            $display("  [PASS] dropped slot reusable");     // 通过
+        if ((tx_frames == 5) && (tx_mem[tx_start[4]+4] == 8'h00) &&  // 槽位 6 的帧发出
+            (tx_mem[tx_start[4]+5] == 8'h06) && (tx_mem[tx_start[4]+42] == 8'h55))  // VLID 与载荷
+            $display("  [PASS] fragmented slot reusable");   // 通过
         else do_fail("reuse failed");                       // 失败
 
         if (fail_cnt == 0) $display("PASS: joint app tx chain"); // 汇总

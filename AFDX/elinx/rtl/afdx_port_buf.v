@@ -23,7 +23,10 @@ module afdx_port_buf #(                                     // 声明模块及�
     input  wire [VL_INDEX_WIDTH-1:0]     rx_wr_vl_index,         // 接收缓冲写槽位号 = vlid 低位
     input  wire [BYTE_OFFSET_WIDTH-1:0]  rx_wr_byte_offset,      // 接收缓冲写字节偏移（帧内，从 0 递增）
     input  wire [DATA_WIDTH-1:0]         rx_wr_data,             // 接收缓冲写数据
-    input  wire                          rx_wr_frame_done,       // 帧尾脉冲：提交本帧（登记长度/入队）
+    input  wire                          rx_wr_frame_done,       // 消息结束脉冲：仅末片/未分片帧有效，提交整条消息
+    input  wire [15:0]                   rx_wr_frag_off,         // 本帧数据在整条消息内的起始偏移（0=首片）
+    input  wire                          rx_wr_more,             // 本帧之后还有分片（IP MF=1）
+    input  wire                          rx_wr_frag_done,        // 每帧结束脉冲（含非末片）
     input  wire [15:0]                   rx_wr_frame_len,        // 本帧数据长度（与帧尾同拍）
     input  wire                          rx_wr_queue_mode,       // 0=采样端口（覆盖） 1=队列/SAP 端口（入队）
     output wire                          rx_wr_full,             // 该槽位队列已满：RX 应丢弃新帧并计错
@@ -128,6 +131,9 @@ module afdx_port_buf #(                                     // 声明模块及�
         .wr_byte_offset(rx_wr_byte_offset),                    // input  [10:0]
         .wr_data       (rx_wr_data),                           // input  [7:0]
         .wr_frame_done (rx_wr_frame_done),                     // input  [0:0]
+        .wr_frag_off   (rx_wr_frag_off),                       // input  [15:0]
+        .wr_more       (rx_wr_more),                           // input  [0:0]
+        .wr_frag_done  (rx_wr_frag_done),                      // input  [0:0]
         .wr_frame_len  (rx_wr_frame_len),                      // input  [15:0]
         .wr_queue_mode (rx_wr_queue_mode),                     // input  [0:0]
         .wr_full       (rx_wr_full),                           // output [0:0]

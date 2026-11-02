@@ -162,6 +162,9 @@ module AFDX_top #(                                          // 声明模块及�
     wire [BYTE_OFFSET_WIDTH-1:0] rx_port_wr_byte_offset;      // 接收缓冲写字节偏移
     wire [DATA_WIDTH-1:0]     rx_port_wr_data;                // 接收缓冲写数据
     wire                      rx_port_wr_frame_done;          // 接收缓冲帧尾脉冲（提交本帧）
+    wire                      rx_port_wr_frag_done;           // 接收缓冲每帧结束脉冲（含非末片）
+    wire [15:0]               rx_port_wr_frag_off;            // 本帧在整条消息内的起始偏移
+    wire                      rx_port_wr_more;                // 本帧之后还有分片
     wire [15:0]               rx_port_wr_frame_len;           // 本帧应用数据长度
     wire                      rx_port_queue_mode;             // 0=采样端口(覆盖) 1=队列/SAP端口(入队)
     wire                      rx_port_wr_full;                // 该槽位队列已满（RX 应丢弃并计错）
@@ -261,6 +264,9 @@ module AFDX_top #(                                          // 声明模块及�
         .port_wr_byte_offset  (rx_port_wr_byte_offset),       // output [10:0]
         .port_wr_data         (rx_port_wr_data),              // output [7:0]
         .port_wr_frame_done   (rx_port_wr_frame_done),        // output [0:0]
+        .port_wr_frag_done    (rx_port_wr_frag_done),         // output [0:0]
+        .port_wr_frag_off     (rx_port_wr_frag_off),          // output [15:0]
+        .port_wr_more         (rx_port_wr_more),              // output [0:0]
         .port_wr_frame_len    (rx_port_wr_frame_len),         // output [15:0]
         .port_wr_queue_mode   (rx_port_queue_mode),           // output [0:0]
         .port_wr_full         (rx_port_wr_full),              // input  [0:0]
@@ -442,6 +448,9 @@ module AFDX_top #(                                          // 声明模块及�
         .rx_wr_byte_offset    (rx_port_wr_byte_offset),       // input  [10:0]
         .rx_wr_data           (rx_port_wr_data),              // input  [7:0]
         .rx_wr_frame_done     (rx_port_wr_frame_done),        // input  [0:0]
+        .rx_wr_frag_done      (rx_port_wr_frag_done),         // input  [0:0]
+        .rx_wr_frag_off       (rx_port_wr_frag_off),          // input  [15:0]
+        .rx_wr_more           (rx_port_wr_more),              // input  [0:0]
         .rx_wr_frame_len      (rx_port_wr_frame_len),         // input  [15:0]
         .rx_wr_queue_mode     (rx_port_queue_mode),           // input  [0:0]
         .rx_wr_full           (rx_port_wr_full),              // output [0:0]

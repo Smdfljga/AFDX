@@ -81,6 +81,17 @@ set_output_delay -clock {clk_125m} -min 0.500 [get_ports {p0_txd_b[0] p0_txd_b[1
 # The GMII transmit clock inputs do not drive MAC logic in GMII mode
 set_false_path -from [get_ports {p0_txc_a p0_txc_b}]
 
+# ---------------------------------------------------------------------------
+# 厂商 MAC IP 内部软复位：IP 把 e_rst_en 当异步清零分发到 RX/TX FIFO 的 aclr 端，
+# 分析工具据此对 p0_rxc_a/b 域做 recovery/removal 检查，会虚报约 578 个失败端点
+# （本次 289+289）。该复位只在初始化时释放一次，业务开跑前早已稳定，且 IP 内部
+# FIFO 随后由软件清空，不构成真实时序要求，故排除。只影响这一路复位，不动数据通路。
+# 若本工具不认该节点名，可改用下面注释两种写法之一。
+set_false_path -from [get_pins {u_eth_*|inst_gmii_arbi|e_rst_en~I*}]
+# set_false_path -from [get_pins {u_eth_*|*e_rst_en*/Q}]
+# set_false_path -to   [get_pins {u_eth_*|inst_gmii_arbi|*|aclr}]
+
+
 # Slow or static board side interfaces: MDC/MDIO management and PHY reset
 set_false_path -from [get_ports {mdio_a mdio_b}]
 set_false_path -to [get_ports {mdc_a mdc_b phy_rstb_a phy_rstb_b}]

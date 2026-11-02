@@ -5,19 +5,19 @@ Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 Top level modules:
 	mib_rx_ip
 
-} {} {}} F:/bigfatfish/AFDX/elinx/rtl/afdx_port_buf.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/afdx_port_buf.v
-Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module afdx_port_buf
-
-Top level modules:
-	afdx_port_buf
-
 } {} {}} F:/bigfatfish/AFDX/sim/sim_final/single/tb_afdx_rx.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/sim/sim_final/single/tb_afdx_rx.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 -- Compiling module tb_afdx_rx
 
 Top level modules:
 	tb_afdx_rx
+
+} {} {}} F:/bigfatfish/AFDX/elinx/rtl/afdx_port_buf.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/afdx_port_buf.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module afdx_port_buf
+
+Top level modules:
+	afdx_port_buf
 
 } {} {}} F:/bigfatfish/AFDX/elinx/rtl/snmp_agent.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/snmp_agent.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
@@ -26,13 +26,6 @@ Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 Top level modules:
 	snmp_agent
 
-} {} {}} F:/bigfatfish/AFDX/elinx/rtl/tx_wr_arb.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/tx_wr_arb.v
-Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module tx_wr_arb
-
-Top level modules:
-	tx_wr_arb
-
 } {} {}} F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/rx_port_buf_ip/rx_port_buf_ip.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/rx_port_buf_ip/rx_port_buf_ip.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 -- Compiling module rx_port_buf_ip
@@ -40,12 +33,19 @@ Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 Top level modules:
 	rx_port_buf_ip
 
-} {} {}} F:/bigfatfish/AFDX/elinx/rtl/afdx_tx_buf.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/afdx_tx_buf.v
+} {} {}} F:/bigfatfish/AFDX/elinx/rtl/tx_wr_arb.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/tx_wr_arb.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module afdx_tx_buf
+-- Compiling module tx_wr_arb
 
 Top level modules:
-	afdx_tx_buf
+	tx_wr_arb
+
+} {} {}} F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/vl_config_ip/vl_config_ip.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/vl_config_ip/vl_config_ip.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module vl_config_ip
+
+Top level modules:
+	vl_config_ip
 
 } {} {}} F:/bigfatfish/AFDX/sim/sim_final/link/tb_joint_app_tx.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/sim/sim_final/link/tb_joint_app_tx.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
@@ -54,12 +54,12 @@ Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 Top level modules:
 	tb_joint_app_tx
 
-} {} {}} F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/vl_config_ip/vl_config_ip.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/vl_config_ip/vl_config_ip.v
+} {} {}} F:/bigfatfish/AFDX/elinx/rtl/afdx_tx_buf.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/afdx_tx_buf.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module vl_config_ip
+-- Compiling module afdx_tx_buf
 
 Top level modules:
-	vl_config_ip
+	afdx_tx_buf
 
 } {} {}} F:/bigfatfish/AFDX/sim/sim_final/link/tb_joint_615a.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/sim/sim_final/link/tb_joint_615a.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
@@ -348,19 +348,19 @@ Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 Top level modules:
 	vl_state_ram
 
-} {} {}} F:/bigfatfish/AFDX/elinx/rtl/afdx_net_rx.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/afdx_net_rx.v
-Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module afdx_net_rx
-
-Top level modules:
-	afdx_net_rx
-
 } {} {}} F:/bigfatfish/AFDX/elinx/rtl/rtc_rx.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/rtc_rx.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 -- Compiling module rtc_rx
 
 Top level modules:
 	rtc_rx
+
+} {} {}} F:/bigfatfish/AFDX/elinx/rtl/afdx_net_rx.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/afdx_net_rx.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module afdx_net_rx
+
+Top level modules:
+	afdx_net_rx
 
 } {} {}} F:/bigfatfish/AFDX/sim/sim_final/single/tb_afdx_rx_regression.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/sim/sim_final/single/tb_afdx_rx_regression.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
@@ -376,13 +376,6 @@ Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 Top level modules:
 	tb_afdx_tx
 
-} {} {}} F:/bigfatfish/AFDX/elinx/rtl/tftp.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/tftp.v
-Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module tftp
-
-Top level modules:
-	tftp
-
 } {} {}} F:/bigfatfish/AFDX/elinx/rtl/config_wr.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/config_wr.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 -- Compiling module config_wr
@@ -390,26 +383,19 @@ Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 Top level modules:
 	config_wr
 
-} {} {}} F:/bigfatfish/AFDX/elinx/rtl/rx_port_buf.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/rx_port_buf.v
+} {} {}} F:/bigfatfish/AFDX/elinx/rtl/tftp.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/tftp.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module rx_port_buf
+-- Compiling module tftp
 
 Top level modules:
-	rx_port_buf
+	tftp
 
-} {} {}} F:/bigfatfish/AFDX/elinx/rtl/flash_ctrl.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/flash_ctrl.v
+} {} {}} F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/file_table_ip/file_table_ip.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/file_table_ip/file_table_ip.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module flash_ctrl
+-- Compiling module file_table_ip
 
 Top level modules:
-	flash_ctrl
-
-} {} {}} F:/bigfatfish/AFDX/elinx/rtl/afdx_net_rx_wr.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/afdx_net_rx_wr.v
-Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module afdx_net_rx_wr
-
-Top level modules:
-	afdx_net_rx_wr
+	file_table_ip
 
 } {} {}} F:/bigfatfish/AFDX/sim/sim_final/single/tb_local_rtc_regression.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/sim/sim_final/single/tb_local_rtc_regression.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
@@ -418,12 +404,26 @@ Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
 Top level modules:
 	tb_local_rtc_regression
 
-} {} {}} F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/file_table_ip/file_table_ip.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/file_table_ip/file_table_ip.v
+} {} {}} F:/bigfatfish/AFDX/elinx/rtl/afdx_net_rx_wr.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/afdx_net_rx_wr.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
--- Compiling module file_table_ip
+-- Compiling module afdx_net_rx_wr
 
 Top level modules:
-	file_table_ip
+	afdx_net_rx_wr
+
+} {} {}} F:/bigfatfish/AFDX/elinx/rtl/flash_ctrl.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/flash_ctrl.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module flash_ctrl
+
+Top level modules:
+	flash_ctrl
+
+} {} {}} F:/bigfatfish/AFDX/elinx/rtl/rx_port_buf.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/rx_port_buf.v
+Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+-- Compiling module rx_port_buf
+
+Top level modules:
+	rx_port_buf
 
 } {} {}} F:/bigfatfish/AFDX/elinx/rtl/top.v {1 {vlog -work work -vopt -stats=none F:/bigfatfish/AFDX/elinx/rtl/top.v
 Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020

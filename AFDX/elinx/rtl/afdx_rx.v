@@ -64,7 +64,10 @@ module afdx_rx #(                                           // 声明模块及�
     output wire                          rx_ready_rtc,           // RTC 端口一帧接收完成
 
     // ==================== 端口缓冲队列控制（采样 / 队列 / SAP 语义） ====================
-    output wire                          port_wr_frame_done,     // 帧尾脉冲：提交本帧（登记长度/入队）
+    output wire                          port_wr_frame_done,     // 消息结束脉冲：仅末片/未分片帧有效，提交整条消息
+    output wire                          port_wr_frag_done,      // 每帧结束脉冲（含非末片），推进重组状态
+    output wire [15:0]                   port_wr_frag_off,       // 本帧数据在整条消息内的起始偏移（= 片偏移×8）
+    output wire                          port_wr_more,           // 本帧之后还有分片（IP MF=1）
     output wire [15:0]                   port_wr_frame_len,      // 本帧应用数据长度（与帧尾同拍）
     output wire                          port_wr_queue_mode,     // 0=采样端口(覆盖) 1=队列/SAP端口(入队)，由 cfg_port_type 决定
     input  wire                          port_wr_full,           // 该槽位队列已满：本帧应丢弃并计 rx_error_count
@@ -157,10 +160,11 @@ module afdx_rx #(                                           // 声明模块及�
     wire [15:0] frame_core = 16'd14 + ip_total_len_r;           // 不含以太网填充的帧长
     wire config_hit = cfg_valid && (cfg_tag == vlid_r) && prefix_ok; // 配置命中
     wire udp_len_ok = (udp_len_r == ip_total_len_r - 16'd20);   // UDP 长度与 IP 总长自洽
+    wire frag_frame = ip_mf || (ip_frag_off != 13'd0);          // 本帧是否属于一条被分片的 IP 报文
     wire data_len_ok = ip_header_ok && ip_cksum_ok && udp_len_ok &&  // IP/UDP 长度、校验和与载荷范围共同合法
                        (ip_total_len_r >= 16'd29) &&        // IP 总长度至少容纳头部与序列号
                        (ip_total_len_r <= 16'd1504) &&      // IP 总长度不得超过当前接口允许的上限
-                       (data_len_w >= 16'd17) &&            // 应用载荷满足既有状态机规定的最小长度
+                       (data_len_w >= (frag_frame ? 16'd1 : 16'd17)) &&  // 分片片断允许短载荷，整帧仍要求最短长度
                        (data_len_w <= 16'd1471) &&          // 应用载荷不超过当前组帧允许的最大长度
                        (data_len_w <= cfg_lmax_r);              // 长度与 Lmax 均合法
     wire port_ok = (udp_dst_r == cfg_udp_port_r);               // UDP 端口过滤
@@ -186,6 +190,55 @@ module afdx_rx #(                                           // 声明模块及�
     wire        cksum_now_ok = (cksum_fold[15:0] == 16'hFFFF);  // 含校验和字段的反码和为全 1
     wire [47:0] da_new = {da_acc[39:0], ff_rx_data};             // 本拍更新后的完整目的 MAC
 
+    // ==================== 帧提交与消息完成判定 ====================
+    wire dispatch_ok = (state == S_DISPATCH) && !port_wr_full;  // 本帧确实被提交
+
+    // ==================== 分片重组超时监控 ====================
+    // 收到非末片后等待后续分片；超过 2^22 个时钟（25MHz 下约 168 ms，远大于最大 BAG）
+    // 仍没有后续片，说明消息不完整：脉冲一次接收错误，并清掉等待标志。
+    // 端口缓冲里已经写下的半条消息不会提交，等下次首片把偏移清零后自然覆盖。
+    localparam [21:0] REASM_TIMEOUT = 22'h3FFFFF;               // 重组等待上限
+    reg  [21:0] reasm_timer;                                    // 等待后续分片的计时器
+    reg         reasm_wait;                                     // 已收到非末片，正在等待后续片
+    reg  [VL_INDEX_WIDTH-1:0] reasm_slot;                       // 正在重组的槽位（超时时清它）
+    reg  [(1<<VL_INDEX_WIDTH)-1:0] reasm_seen;                  // 每槽位：已经收到过非末片
+    wire        reasm_timeout_pulse = reasm_wait && (reasm_timer == REASM_TIMEOUT); // 超时脉冲
+    // 片偏移非零又不是末片，说明中间片丢了；片偏移非零当末片、但该槽位没收到过首片，
+    // 说明这是一条消息的残片（乱序或丢片），都按接收错误处理。
+    wire        frag_orphan = dispatch_ok && (ip_frag_off != 13'd0) && !reasm_seen[vl_slot]; // 无首片的残片
+    wire        msg_done = dispatch_ok && !ip_mf && !frag_orphan; // 整条消息（末片或未分片帧）正常收全
+
+    // 每槽位的重组标记用“整体赋值 + 掩码”维护：同一个寄存器只在一条语句里更新，
+    // 按下标分多路赋值时 Quartus/eLinx 无法推断寄存器（会报 can't infer register）。
+    localparam SLOT_CNT = 1 << VL_INDEX_WIDTH;                  // 槽位数，默认 16
+    wire [SLOT_CNT-1:0] seen_one = {{(SLOT_CNT-1){1'b0}}, 1'b1}; // 单比特掩码基值
+    wire [SLOT_CNT-1:0] seen_set_mask = (dispatch_ok && ip_mf) ? (seen_one << vl_slot) : {SLOT_CNT{1'b0}};  // 置位
+    wire [SLOT_CNT-1:0] seen_clr_mask =                          // 清零：消息结束/超时优先，其次残片
+        (msg_done || reasm_timeout_pulse) ? (seen_one << reasm_slot) :  // 消息结束或超时清该槽位
+        (frag_orphan                      ? (seen_one << vl_slot)   : {SLOT_CNT{1'b0}});  // 否则残片清本槽位
+    wire [SLOT_CNT-1:0] seen_next = (reasm_seen & ~seen_clr_mask) | seen_set_mask; // 下一拍的重组标记
+
+    always @(posedge clk or negedge rst_b) begin                // 按时钟沿更新寄存器，并响应声明的异步复位
+        if (!rst_b) begin                                       // 检查复位或正常运行条件
+            reasm_timer <= 22'd0;                               // 复位清零计时器
+            reasm_wait  <= 1'b0;                                // 复位退出重组等待
+            reasm_slot  <= {VL_INDEX_WIDTH{1'b0}};              // 复位重组槽位号
+            reasm_seen  <= {SLOT_CNT{1'b0}};                    // 复位清空每槽位重组标记
+        end                                                     // 当前语句组结束
+        else if (msg_done || reasm_timeout_pulse) begin          // 整条收全或超时：退出等待
+            reasm_timer <= 22'd0;                               // 计时器归零
+            reasm_wait  <= 1'b0;                                // 清除等待标志
+        end                                                     // 当前语句组结束
+        else if (dispatch_ok && ip_mf) begin                    // 收到非末片：重新开始计时
+            reasm_timer <= 22'd0;                               // 计时器归零
+            reasm_wait  <= 1'b1;                                // 标记正在等待后续片
+            reasm_slot  <= vl_slot;                             // 记住这条消息的槽位
+        end                                                     // 当前语句组结束
+        else if (reasm_wait)                                    // 等待期间持续计时
+            reasm_timer <= reasm_timer + 22'd1;                 // 逐拍累加
+        reasm_seen <= seen_next;                                // 唯一一处更新重组标记，避免按下标多路赋值
+    end                                                         // 当前语句组结束
+
     // ==================== 查表/状态表地址与读使能 ====================
     assign cfg_addr = vl_addr;                                  // output [11:0]
     assign st_addr  = vl_addr;                                  // output [11:0]
@@ -200,30 +253,32 @@ module afdx_rx #(                                           // 声明模块及�
     assign port_wr_data = ff_rx_data;                           // output [7:0]
     assign port_type    = cfg_port_type_r;                      // output [1:0]
     assign port_wr_queue_mode = (cfg_port_type_r != 2'd0);      // output [0:0]
-    assign port_wr_frame_done = (state == S_DISPATCH) && !port_wr_full; // output [0:0]
-    assign port_wr_frame_len = data_len_w;                      // output [15:0]
+    assign port_wr_frame_done = msg_done;                        // 只有整条消息收全才提交
+    assign port_wr_frag_done  = (state == S_DISPATCH) && !port_wr_full;  // 每帧都推进重组状态
+    assign port_wr_frag_off   = {ip_frag_off, 3'b000};           // 片偏移以 8 字节为单位，换算成字节偏移
+    assign port_wr_more       = ip_mf;                           // 本帧之后还有分片
+    assign port_wr_frame_len  = data_len_w;                      // output [15:0]
 
     // ==================== MIB / 中断 ====================
     assign mib_addr         = vl_addr;                          // output [11:0]
-    assign mib_rx_frame_inc = (state == S_DISPATCH) && !port_wr_full; // output [0:0]
-    assign mib_rx_error_inc = drop_entry && !drop_rm_drop;      // output [0:0]
+    assign mib_rx_frame_inc = msg_done;                          // 只有整条消息收全才计帧
+    assign mib_rx_error_inc = (drop_entry && !drop_rm_drop) || reasm_timeout_pulse || frag_orphan; // output [0:0]
     assign mib_sn_error_inc = drop_entry && drop_sn_err;        // output [0:0]
     assign mib_rm_drop_inc  = drop_entry && drop_rm_drop;       // output [0:0]
     assign mib_rx_byte_inc  = (state == S_MIB_BYTES) && (byte_left != 16'd0); // output [0:0]
 
-    assign irq_rx_frame = (state == S_DISPATCH) && !port_wr_full; // output [0:0]
-    assign irq_error    = drop_entry;                           // output [0:0]
+    assign irq_rx_frame = msg_done;                             // 只有整条消息收全才报完成
+    assign irq_error    = drop_entry || reasm_timeout_pulse || frag_orphan; // output [0:0]
     assign ff_rx_rdy    = (state == S_IDLE);                    // output [0:0]：处理整帧期间拉低
 
     // ==================== 就绪通知 ====================
-    wire dispatch_ok = (state == S_DISPATCH) && !port_wr_full;  // 本帧确实被提交
     wire is_snmp_slot = (vlid_r[VL_INDEX_WIDTH-1:0] == VL_INDEX_SNMP[VL_INDEX_WIDTH-1:0]);  // 当前载荷是否发给 SNMP 代理槽位
     wire is_615a_slot = (vlid_r[VL_INDEX_WIDTH-1:0] == VL_INDEX_615A[VL_INDEX_WIDTH-1:0]);  // 当前载荷是否发给 615A 代理槽位
     wire is_rtc_slot  = (vlid_r[VL_INDEX_WIDTH-1:0] == VL_INDEX_RTC[VL_INDEX_WIDTH-1:0]);  // 当前载荷是否发给 RTC 代理槽位
-    assign rx_ready_snmp = dispatch_ok && is_snmp_slot;         // output [0:0]
-    assign rx_ready_615a = dispatch_ok && is_615a_slot;         // output [0:0]
-    assign rx_ready_rtc  = dispatch_ok && is_rtc_slot;          // output [0:0]
-    assign rx_ready_app  = dispatch_ok && !is_snmp_slot &&  // 设置或组合计算应用端口一帧接收完成
+    assign rx_ready_snmp = msg_done && is_snmp_slot;            // output [0:0]
+    assign rx_ready_615a = msg_done && is_615a_slot;            // output [0:0]
+    assign rx_ready_rtc  = msg_done && is_rtc_slot;             // output [0:0]
+    assign rx_ready_app  = msg_done && !is_snmp_slot &&      // 设置或组合计算应用端口一帧接收完成
                            !is_615a_slot && !is_rtc_slot;       // output [0:0]
 
     // ==================== 状态写回 ====================
@@ -303,10 +358,7 @@ module afdx_rx #(                                           // 声明模块及�
                     if (ff_rx_eop)                          // 检查MAC 接收包结束的条件
                         drop_req = 1'b1;                        // IP 头未收满 20 字节
                     else if (ip_cnt == 5'd19) begin         // 检查IP 头字节计数 0~19的条件
-                        if (ip_mf || (ip_frag_off != 13'd0))  // 检查MF 分片标志、片偏移的条件
-                            drop_req = 1'b1;                    // 分片帧直接丢弃，不做重组
-                        else                                // 采用前一条件未满足时的处理
-                            nxt_state = S_UDP_PARSE;        // 设置或组合计算次态
+                        nxt_state = S_UDP_PARSE;            // 分片帧同样交给端口缓冲按偏移重组
                     end                                     // 当前语句组结束
                 end                                         // 当前语句组结束
             end                                             // 当前语句组结束

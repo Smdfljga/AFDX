@@ -1,4 +1,4 @@
-# AFDX 端系统仿真套件（20 个用例）
+# AFDX 端系统仿真套件（21 个用例）
 
 为写报告整理过的一套仿真：按「单模块 / 全链路 / 特殊」三类归档，每个用例都有一份说明文档（怎么抓波形、成功现象）。
 每个分类目录下的 `doc/` 里是对应用例的详细说明。
@@ -8,7 +8,7 @@
 ```
 sim_final/
 ├─ README.md            ← 本文件（每个用例一句话）
-├─ run_final.ps1        ← 一键编译 + 跑完 20 个用例（用行为模型），结果写 report.json
+├─ run_final.ps1        ← 一键编译 + 跑完 21 个用例（用行为模型），结果写 report.json
 ├─ run_vendor.ps1       ← 同一套用例改用工程里的厂商 IP wrapper + elinx_lib 再跑一遍
 ├─ report.json          ← 最近一次运行结果
 ├─ 单模块仿真/          ← 10 个：单个 RTL 模块的功能自检
@@ -41,7 +41,7 @@ powershell -File .\run_vendor.ps1 -ModelSimBin 'D:\Program Files\ModelSim\win64'
 
 - 不编 `sim/ip_sim_models.v`，改用 `elinx/afdx.srcs/sources_1/ip/` 下的厂商 IP wrapper（不含 `eth_*.v`、`pll.v`）；
 - `vsim` 要带 `-L elinx_lib`，库 `elinx_lib` 需已按厂商提供的仿真源编译好；
-- 日志在 `_build_vendor\<tb>.log`，20 个用例同样全过才算一致。
+- 日志在 `_build_vendor\<tb>.log`，21 个用例同样全过才算一致。
 
 ### 存储 IP 的读延迟约定（重要）
 
@@ -116,6 +116,7 @@ cd F:\bigfatfish\AFDX\sim\sim_final\_build
 | 3 | `tb_tx_vl128` | VL 容量：128 条发送 VL 全部可配置可寻址，每帧 DA 携带自己的 VLID，SN 按 VL 独立递增 | [03](特殊仿真/doc/03_tb_tx_vl128.md) |
 | 4 | `tb_joint_multivl` | VL 并发：8 条 VL 同时挂起全部上线（突发 186 Mbps），各 VL 的 BAG 独立整形互不阻塞 | [04](特殊仿真/doc/04_tb_joint_multivl.md) |
 | 5 | `tb_joint_latency` | 变长帧时延与抖动：64/512/1024/1514 B 发送时延 4.92/40.76/81.72/120.92 µs，抖动 0；接收 64~1518 B 均 8.12 µs | [05](特殊仿真/doc/05_tb_joint_latency.md) |
+| 6 | `tb_joint_frag` | IP 分片发送与分片重组：1200 B 消息按 Lmax=512 切成 463+463+274 三片（片偏移 0/59/118、MF 前两片 1 末片 0、SN 0/1/2），回灌后重组成 1200 B 逐字节一致；残片/缺末片不提交且可恢复 | [06](特殊仿真/doc/06_tb_joint_frag.md) |
 
 ## 四、相对上一版（30 个）剔除的 10 个用例
 
@@ -137,10 +138,10 @@ cd F:\bigfatfish\AFDX\sim\sim_final\_build
 
 | 项 | 结果 |
 |---|---|
-| 用例 | **20 / 20 PASS**（18 个自检 + 2 个纯波形） |
+| 用例 | **21 / 21 PASS**（19 个自检 + 2 个纯波形） |
 | 行为模型编译（`run_final.ps1`） | Errors: 0, Warnings: 0 |
 | 厂商 IP 编译（`run_vendor.ps1`） | Errors: 0, Warnings: 0 |
-| 两条路线的用例结果 | 都是 20 / 20 PASS（时序模型与真实 IP 一致） |
+| 两条路线的用例结果 | 都是 21 / 21 PASS（时序模型与真实 IP 一致） |
 | 脚本 exit code | 0 |
 
 详见 `report.json`。

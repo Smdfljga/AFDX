@@ -129,10 +129,22 @@ module afdx_tx #(                                           // 声明模块及�
     reg [1:0]  finish_kind;                                     // 0=成功 1=错误 2=空帧跳过
     reg        frag_error;                                      // 本帧因超 Lmax 被丢弃
 
+    // ==================== 分片发送上下文 ====================
+    // 一条应用消息可能超过 Lmax，按 Lmax-43 切片、每片自成以太网帧；
+    // 非末片的片内数据取 8n+7 字节，使“8B UDP + 数据 + 1B SN”恰好 8 字节对齐，
+    // IP 片偏移字段才是整数。
+    reg [15:0] msg_len_r;                                       // 本条消息总字节数
+    reg [15:0] msg_off_r;                                       // 本片起始的消息内字节偏移
+    reg [4:0]  frag_cnt_r;                                      // 本条消息已发出的帧数（算 IP 片偏移用）
+    reg        frag_more_r;                                     // 本帧之后还有分片（IP MF）
+    reg        frag_active;                                     // 该槽位消息正处于分片发送中
+    reg [15:0] flg_off_r;                                       // 本帧 IP 标志/片偏移字（无分片时为 0x4000）
+
     // ==================== 组合调度与计时 ====================
     reg [VL_INDEX_WIDTH-1:0] pending_idx;                       // 待发槽位最低编号，不用函数循环以保证工具兼容
     reg [15:0]               bag_skip;                          // 本轮 BAG 未到期的槽位（跳过它们，避免队头阻塞）
-    wire [15:0]              pending_ready = pending & ~bag_skip; // 待发且本轮还没被跳过（或已到期）的槽位
+    wire [15:0]              pending_mask = frag_active ? (16'd1 << sched_idx) : 16'hFFFF; // 分片续发期间只调度同一条消息
+    wire [15:0]              pending_ready = pending & ~bag_skip & pending_mask; // 待发且本轮还没被跳过（或已到期）的槽位
     reg [VL_INDEX_WIDTH-1:0] pending_idx_ready;                 // 未被跳过的待发槽位里编号最小的那个
     always @(*) begin                                       // 组合选择最低编号的"未跳过"待发槽位
         casez (pending_ready)                               // 与下面 pending_idx 相同的优先级编码
@@ -182,6 +194,30 @@ module afdx_tx #(                                           // 声明模块及�
     wire [31:0] elapsed = sys_ts - st_rd_data[63:32];           // 距离上一帧的无符号时间差
     wire bag_due = !st_rd_data[24] || (bag_us == 32'd0) || (elapsed >= bag_us); // BAG 已到期
 
+    // ==================== 分片尺寸计算 ====================
+    // 每帧最多承载 Lmax-43 字节应用数据（43 = 14 MAC + 20 IP + 8 UDP + 1 SN）；
+    // 非末片再向下取到 8n+7，保证 IP 片偏移以 8 字节为单位仍然成立。
+    wire [15:0] frag_cap   = (cfg_lmax > 16'd43) ? (cfg_lmax - 16'd43) : 16'd1; // 单片承载上限
+    wire [15:0] frag_capc  = (frag_cap > 16'd1471) ? 16'd1471 : frag_cap;  // 再受 1471 字节上限约束
+    wire [15:0] frag_base  = (frag_capc > 16'd16) ? frag_capc : 16'd16;    // 防止下面减 7 时下溢
+    wire [15:0] frag_t     = frag_base - 16'd7;                            // 8 字节对齐中间量
+    wire [15:0] frag_chunk = {frag_t[15:3], 3'b000} + 16'd7;               // 非末片数据字节数 = 8n+7
+
+    wire [15:0] msg_len_sel  = frag_active ? msg_len_r : port_payload_len; // 本条消息总长
+    wire [15:0] msg_left     = msg_len_sel - msg_off_r;                    // 本片还能取多少字节
+    wire        frag_more_sel = (msg_left > frag_chunk);                   // 装不下=后面还有分片
+    wire [15:0] frag_len_sel = frag_more_sel ? frag_chunk : msg_left;      // 本片实际承载的数据字节数
+    // 每片都自带 8 字节 UDP 头与 1 字节 SN，所以片 i 的 IP 载荷起点是 Σ(数据+9)；
+    // 非末片数据取 8n+7 时每片正好推进 8 的倍数，片偏移字段是整数。
+    wire [15:0] frag_ipoff   = (frag_cnt_r == 5'd0) ? 16'd0 :               // 首片偏移为零
+                               ((msg_off_r + {frag_cnt_r, 3'b000} + {11'd0, frag_cnt_r}) >> 3); // (数据累计+9×片号)/8
+    wire        frag_hdr     = frag_more_sel || (frag_cnt_r != 5'd0);      // 本帧是否属于被分片的报文
+    wire [15:0] flg_off_sel  = frag_hdr ? {3'b000, frag_more_sel, frag_ipoff[12:0]} : 16'h4000; // DF/MF+片偏移
+    // 只有“未分片的单帧”才把短载荷补零到 17 字节；分片的最后一片不能补，
+    // 否则接收侧按片长累加会多出填充字节。
+    wire        pad_to_17    = !frag_more_sel && (frag_cnt_r == 5'd0);     // 未分片单帧才补零
+    wire [15:0] frame_data_len = (pad_to_17 && (frag_len_sel < 16'd17)) ? 16'd17 : frag_len_sel; // 本帧发出的载荷长度
+
     // ==================== 查表与读缓冲输出 ====================
     assign cfg_addr = vlid_r[VL_ADDR_WIDTH-1:0];                // output [11:0]
     assign cfg_rd_en = (state == S_CFG_READ);                   // output [0:0]
@@ -203,7 +239,7 @@ module afdx_tx #(                                           // 声明模块及�
                      (payload_pos < payload_len_r);              // 只对真实应用数据出队
     wire pay_clr   = (state == S_PAYLOAD_RD);                    // 新帧开始，清空预取缓存
     assign port_rd_en = pay_issue;                              // output [0:0]
-    assign port_rd_byte_offset = pay_req_ix[BYTE_OFFSET_WIDTH-1:0]; // output [10:0]
+    assign port_rd_byte_offset = (msg_off_r + pay_req_ix);      // output [10:0]：消息内偏移（分片时从片起点算）
 
     // 载荷预取循环缓冲：写指针收返回字节，读指针给发送字节，两个指针之差就是缓存占用
     always @(posedge clk or negedge rst_b) begin            // 按时钟沿更新寄存器，并响应声明的异步复位
@@ -236,13 +272,14 @@ module afdx_tx #(                                           // 声明模块及�
         input [15:0] ident;                                 // 函数输入的 IP 标识字段
         input [31:0] src_ip;                                // 函数输入的源 IPv4 地址
         input [31:0] dst_ip;                                // 函数输入的目的 IPv4 地址
+        input [15:0] flg_off;                               // 函数输入的标志/片偏移字（未分片为 0x4000）
         reg [19:0] sum;                                     // 加宽的组合累加结果，保留最高进位
         begin                                               // 开始执行当前条件或循环的语句组
             sum = 20'd0;                                    // 设置或组合计算sum
             sum = sum + 16'h4500;                           // 设置或组合计算sum
             sum = sum + total_len;                          // 设置或组合计算sum
             sum = sum + ident;                              // 设置或组合计算sum
-            sum = sum + 16'h4000;                           // 设置或组合计算sum
+            sum = sum + flg_off;                            // 标志位与片偏移参与校验和
             sum = sum + 16'h0111;                           // 设置或组合计算sum
             sum = sum + src_ip[31:16];                      // 设置或组合计算sum
             sum = sum + src_ip[15:0];                       // 设置或组合计算sum
@@ -286,7 +323,7 @@ module afdx_tx #(                                           // 声明模块及�
                 else if (port_payload_len == 16'd0)         // 检查该 VL 待发载荷长度（字节）的条件
                     nxt_state = S_FINISH;                       // 空帧跳过
                 else if ((port_payload_len > cfg_lmax) || (port_payload_len > 16'd1471))  // 检查该 VL 待发载荷长度（字节）、Lmax、该 VL 待发载荷长度（字节）的条件
-                    nxt_state = S_FINISH;                       // 超 Lmax，不分片，直接丢弃
+                    nxt_state = S_PAYLOAD_RD;                   // 超 Lmax 或超 1471 字节：改为分片发送
                 else if (!bag_due)                          // 检查BAG 已到期的条件
                     nxt_state = S_IDLE;                         // BAG 未到期：跳过这条 VL，回去看别的槽位
                 else                                        // 采用前一条件未满足时的处理
@@ -350,6 +387,12 @@ module afdx_tx #(                                           // 声明模块及�
             bag_pulse     <= 1'b0;                          // 时钟沿更新BAG 违反单拍计数
             finish_kind   <= 2'd0;                          // 时钟沿更新0=成功 1=错误 2=空帧跳过
             frag_error    <= 1'b0;                          // 时钟沿更新本帧因超 Lmax 被丢弃
+            msg_len_r     <= 16'd0;                         // 复位消息总长
+            msg_off_r     <= 16'd0;                         // 复位消息内偏移
+            frag_cnt_r    <= 5'd0;                          // 复位已发分片数
+            frag_more_r   <= 1'b0;                          // 复位后续分片标志
+            frag_active   <= 1'b0;                          // 复位分片状态
+            flg_off_r     <= 16'h4000;                      // 复位为不分片（DF=1）
         end                                                 // 当前语句组结束
         else begin                                          // 前一条件不满足时执行本分支
             bag_pulse <= 1'b0;                              // 时钟沿更新BAG 违反单拍计数
@@ -407,7 +450,6 @@ module afdx_tx #(                                           // 声明模块及�
                 end                                         // 当前语句组结束
 
                 S_DECIDE: begin                             // 处理长度/BAG 判决阶段
-                    payload_len_r <= port_payload_len;      // 时钟沿更新待发应用数据实际长度
                     cfg_udp_r    <= cfg_udp_port;           // 时钟沿更新UDP 目的端口
                     cfg_bag_r    <= cfg_bag;                // 时钟沿更新BAG（ms）
 
@@ -419,34 +461,38 @@ module afdx_tx #(                                           // 声明模块及�
                         finish_kind <= 2'd2;                    // 空帧跳过
                         frag_error  <= 1'b0;                // 时钟沿更新本帧因超 Lmax 被丢弃
                     end                                     // 当前语句组结束
-                    else if ((port_payload_len > cfg_lmax) || (port_payload_len > 16'd1471)) begin  // 检查该 VL 待发载荷长度（字节）、Lmax、该 VL 待发载荷长度（字节）的条件
-                        finish_kind <= 2'd1;                    // 超 Lmax，不分片，直接丢弃
-                        frag_error  <= 1'b1;                // 时钟沿更新本帧因超 Lmax 被丢弃
-                    end                                     // 当前语句组结束
-                    else begin                              // 前一条件不满足时执行本分支
-                        data_len_r    <= (port_payload_len < 16'd17) ? 16'd17 : port_payload_len;  // 时钟沿更新补齐 17 字节后的载荷长度
-                        ip_total_r    <= 16'd29 + ((port_payload_len < 16'd17) ? 16'd17 : port_payload_len);  // 时钟沿更新IP 总长度
-                        udp_len_r     <= 16'd9  + ((port_payload_len < 16'd17) ? 16'd17 : port_payload_len);  // 时钟沿更新UDP 长度
-                        frame_total_r <= ((16'd43 + ((port_payload_len < 16'd17) ? 16'd17 : port_payload_len)) < 16'd64)  // 时钟沿更新组帧后总长度（含最后填充）
-                                          ? 16'd64          // 未回绕时按写读指针差计算已用空间
-                                          : (16'd43 + ((port_payload_len < 16'd17) ? 16'd17 : port_payload_len));  // 继续计算frame_total_r
-                        dst_ip_r      <= 32'hE0E00000 | {16'd0, vlid_r};  // 时钟沿更新目的多播 IP
-                        ip_cksum_r    <= calc_ip_cksum(     // 时钟沿更新IP 首部校验和
-                                            16'd29 + ((port_payload_len < 16'd17) ? 16'd17 : port_payload_len),  // 继续计算ip_cksum_r
-                                            ip_id_cnt, SRC_IP, 32'hE0E00000 | {16'd0, vlid_r});  // 继续计算ip_cksum_r
-                        sn_r <= st_rd_data[24] ?            // 时钟沿更新本帧 SN
+                    // 有效帧（含超 Lmax 需要分片的消息）统一在这里算本帧长度与首部
+                    if (cfg_valid && (cfg_tag == vlid_r) && (port_payload_len != 16'd0)) begin  // 有效且非空帧
+                        frag_error    <= 1'b0;                  // 分片不算错误
+                        if (!frag_active) msg_len_r <= port_payload_len;  // 首片锁存整条消息长度
+                        payload_len_r <= frag_len_sel;          // 本帧实际承载的应用数据字节数
+                        data_len_r    <= frame_data_len;        // 本帧发出的载荷长度（未分片单帧补零到 17）
+                        ip_total_r    <= 16'd29 + frame_data_len;   // IP 总长度
+                        udp_len_r     <= 16'd9  + frame_data_len;   // UDP 长度
+                        frame_total_r <= ((16'd43 + frame_data_len) < 16'd64)  // 以太网最小帧 64 字节
+                                          ? 16'd64          // 不足 64 字节按 64 字节补
+                                          : (16'd43 + frame_data_len);  // 否则按实际长度
+                        flg_off_r     <= flg_off_sel;           // IP 标志/片偏移字
+                        dst_ip_r      <= 32'hE0E00000 | {16'd0, vlid_r};  // 目的多播 IP
+                        ip_cksum_r    <= calc_ip_cksum(     // IP 首部校验和
+                                             16'd29 + frame_data_len,  // IP 总长度
+                                             ip_id_cnt, SRC_IP, 32'hE0E00000 | {16'd0, vlid_r}, flg_off_sel);  // 其余字段
+                        frag_more_r   <= frag_more_sel;         // 本帧后面还有分片
+                        sn_r <= st_rd_data[24] ?            // 每帧一个新的 SN
                                 ((st_rd_data[23:16] == 8'd255) ? 8'd1 : st_rd_data[23:16] + 8'd1) : 8'd0;  // 继续计算sn_r
                          next_sn_r <= st_rd_data[24] ?      // 状态表保存最近成功发送的 SN，与生成规则保持一致
                                       ((st_rd_data[23:16] == 8'd255) ? 8'd1 : st_rd_data[23:16] + 8'd1)  // 继续计算next_sn_r
                                       : 8'd0;               // 首帧回写 0，下帧由已有 SN 生成公式递增到 1
                         start_ts_r <= sys_ts;                    // 时钟沿更新本帧开始发送时刻
 
-                        if (!bag_due) begin                 // 检查BAG 已到期的条件
-                            bag_skip[sched_idx] <= 1'b1;    // 本轮跳过这条 VL，让别的 VL 先发
+                        if (!bag_due && !frag_active) begin  // 未分片的消息：本轮跳过这条 VL，让别的 VL 先发
+                            bag_skip[sched_idx] <= 1'b1;    // 设置跳过标记
                             if (!bag_skip[sched_idx])       // 第一次被跳过才计一次整形等待
                                 bag_pulse <= 1'b1;          // BAG 违反只计一次
                         end                                 // 当前语句组结束
-                        else                                // 采用前一条件未满足时的处理
+                        // 分片续片遇到 BAG 未到期：只回 S_IDLE 轮询，不设跳过标记，
+                        // 否则不会再有任何新帧请求来清除标记，这条消息就永远发不完了。
+                        else if (bag_due)                   // BAG 已到期
                             wait_cnt <= 24'd0;              // 时钟沿更新BAG 等待超时计数器
                     end                                     // 当前语句组结束
                 end                                         // 当前语句组结束
@@ -480,8 +526,21 @@ module afdx_tx #(                                           // 声明模块及�
                 end                                         // 当前语句组结束
 
                 S_FINISH: begin                             // 处理更新状态与计数阶段
-                    pending[sched_idx]  <= 1'b0;            // 时钟沿更新每槽位一个待发标志
-                    bag_skip[sched_idx] <= 1'b0;            // 本帧收尾，清掉该槽位的跳过标记
+                    if ((finish_kind == 2'd0) && frag_more_r) begin  // 成功且还有后续分片
+                        // 保留待发标志：下一片的 BAG 由状态表时间戳自然节流；
+                        // 清掉 bag_skip 让这条 VL 重新参与本轮调度。
+                        msg_off_r  <= msg_off_r + payload_len_r;  // 下一片的消息内起始偏移
+                        frag_cnt_r <= frag_cnt_r + 5'd1;          // 已发帧数加一
+                        frag_active <= 1'b1;                      // 消息仍在发送中
+                        bag_skip[sched_idx] <= 1'b0;              // 允许下一片参与调度
+                    end                                     // 当前语句组结束
+                    else begin                              // 消息结束（成功末片 / 错误 / 空帧）
+                        pending[sched_idx]  <= 1'b0;            // 清该槽位待发标志
+                        bag_skip[sched_idx] <= 1'b0;            // 本帧收尾，清掉该槽位的跳过标记
+                        msg_off_r   <= 16'd0;                   // 消息偏移归零
+                        frag_cnt_r  <= 5'd0;                    // 帧计数归零
+                        frag_active <= 1'b0;                    // 退出分片发送
+                    end                                     // 当前语句组结束
                     if (finish_kind == 2'd0)                // 检查0=成功 1=错误 2=空帧跳过的条件
                         ip_id_cnt <= ip_id_cnt + 16'd1;         // 只对实际发出的帧递增标识
                 end                                         // 当前语句组结束
@@ -531,9 +590,9 @@ module afdx_tx #(                                           // 声明模块及�
         else if (tx_byte_pos == 16'd19)                     // 检查当前输出字节位置的条件
             tx_byte = ip_id_cnt[7:0];                       // 设置或组合计算当前输出字节
         else if (tx_byte_pos == 16'd20)                     // 检查当前输出字节位置的条件
-            tx_byte = 8'h40;                                // 设置或组合计算当前输出字节
+            tx_byte = flg_off_r[15:8];                      // IP 标志 + 片偏移高字节（分片时 MF 置位）
         else if (tx_byte_pos == 16'd21)                     // 检查当前输出字节位置的条件
-            tx_byte = 8'h00;                                    // 设置或组合计算当前输出字节
+            tx_byte = flg_off_r[7:0];                       // IP 片偏移低字节
         else if (tx_byte_pos == 16'd22)                     // 检查当前输出字节位置的条件
             tx_byte = 8'h01;                                // 设置或组合计算当前输出字节
         else if (tx_byte_pos == 16'd23)                     // 检查当前输出字节位置的条件
@@ -596,7 +655,7 @@ module afdx_tx #(                                           // 声明模块及�
     assign mib_tx_byte_inc  = build_active && (tx_byte_pos >= 16'd42) &&  // 设置或组合计算发送字节数 +1（每个发送字节一拍）
                               (tx_byte_pos < 16'd42 + payload_len_r); // output [0:0]：只计实际应用数据
     assign mib_tx_error_inc = finish_error;                     // output [0:0]
-    assign mib_tx_frag_inc  = finish_error && frag_error;       // output [0:0]
+    assign mib_tx_frag_inc  = finish_success && frag_more_r;    // output [0:0]：本帧是分片帧（还有后续分片）
     assign mib_tx_bag_inc   = bag_pulse;                        // output [0:0]
 
     assign st_wr_en = finish_success;                           // output [0:0]
