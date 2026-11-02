@@ -1,0 +1,80 @@
+AFDX 实现补齐与核验交付说明
+日期：2026-10-17
+
+本次交付以桌面 AFDX_副本_部分/AFDX_副本_部分/elinx/rtl 的现有 27 个模块为基线。
+这份输入已经包含内部实现。本次保留其层次、接口与状态机，在独立副本中补齐数据通路并修复可复现的问题；未改动桌面原工程和原始工作簿。
+
+交付范围与结论
+1. 包含接收、发送、端口缓冲、VL 配置、SNMP、615A 和 RTC 七个顶层功能模块及其全部子模块。
+2. 保留两段式状态机。自动逐码核验 27 个模块的参数/端口接口、9 个状态机的 83 个状态、状态/次态寄存器声明、状态更新语句、完整组合跳转块，以及这些状态机文件中的全部连续 assign 驱动。
+   上述内容与输入相同；比较忽略注释和空白，不只是比较状态名称。纯数据字节选择、校验运算和内部寄存器更新作了必要修复。
+3. 所有自有 RTL 的 4409 行非空代码均有行尾注释，保留中文板块、端口说明与例化方向/位宽风格。厂商 IP 的 .v/.eeo 保持原字节内容，未批量改写。
+4. 同步 RAM 读延迟保持一个时钟；FIFO 使用非 show-ahead 的一拍返回模型。有效信号与返回字节对齐。
+5. ModelSim SE-64 10.4 编译 Errors=0、Warnings=0。16 个带结果检查的仿真通过，另 2 个原有波形激励正常结束。
+6. 本交付尚不能宣称完整标准合规或已经能够直接上板验收；下面列出的既有问题受冻结状态机/驱动和既有接口范围限制保留。
+
+本次实际功能修改（11 个 RTL 文件，其他自有 RTL 仅整理注释）
+- afdx_rx.v：IP 首部校验和每个 16 位字累加后回卷，避免较大首部和溢出误丢合法帧。
+- afdx_tx.v：增加两个载荷缓存及读返回标签；MAC 暂停接受数据时不再被提前返回的后续字节覆盖。状态表统一保存最近成功发送的 SN，修复 0,2,4 跳号，验证 0,1,2 与 255→1。补齐 IP 校验和第二次回卷。
+- rx_port_buf.v：修复同槽同时入出队计数、满槽物理写保护、整槽 2048 字节长度、跳读到帧尾误出队，以及旧队列切换为采样模式时的首字节地址。
+- rx_rd_arb.v：SNMP/615A/RTC 在收到响应的同一拍不重复授权旧地址；应用侧仍支持每拍一个读请求。
+- tx_wr_arb.v：四路帧尾同拍计数扩为能表示 4 的位宽，避免截成零；保留既有有限深度事件队列。
+- vl_state_ram.v：RX 低 16 位和 TX 高 48 位独立写入两片既有同规格 IP，再拼回原 64 位读接口，避免过期整字回写互相覆盖。有效位在热复位后遮蔽旧存储内容，与同步读结果打一拍对齐。
+- mib_query.v：锁存计数器编号、表选择和读回值，保持空闲地址；支持连续跨 RX/TX 表查询，后续 OID 改变不污染已接受请求，非法计数器编号返回零。
+- data_loader_615a.v：按成功 FIFO 读请求产生一拍返回有效信号，修复读完最后字节后 empty 拉高导致的永久等待。
+- local_rtc.v：保留 100 MHz→1 us 自由时钟，增加每 1000 us 的毫秒边界；修复广播周期快 1000 倍及校正边界重复触发。
+- tftp.v：新 WRQ 清除上一文件完成标志；状态、跳转和输出驱动未变。
+- snmp_encoder.v：修正固定 OID 模板的 VL 地址高低七位编码，不再错放续字节标志或重复地址位。
+仿真模型 ip_sim_models.v 的 FIFO 内部计数扩为 10 位，以真实表示 512 个字节；对外 usedw 仍为 9 位，满时输出 511，判满使用 full。
+
+新增自检与证据
+- tb_afdx_rx_regression：高首部校验和、IC 序列/重复/跳跃/恢复、回绕和 RM。
+- tb_afdx_tx_regression：MAC 周期性停顿、逐字节载荷、跨帧 SN、回绕和校验和边界。
+- tb_buffers_regression：四路帧尾、环形队列、2048 长度、字段隔离和热复位。
+- tb_rd_arb_regression：应用连续读以及三个代理同时等待时的字节次序，共同仲裁路径。
+- tb_615a_fifo_regression：实际 data_loader_615a 包装层与同步 FIFO 的 512 字节满块、100 字节短块、零字节块、WRQ 与写授权暂停。
+- tb_local_rtc_regression：真实 100 MHz 下的 1/2 ms 周期、校正与零周期恢复。
+- tb_snmp_encoder_regression：VL 地址高低组、表选择、锁存与写仲裁暂停。
+- tb_mib_query_regression：连续跨表、请求撤销后 OID 改变、非法编号和复位。
+原 tb_afdx_rx / tb_afdx_tx 只是波形/报文激励，没有完整自动断言，不计入 16 个自检。
+完整编译与仿真日志见 verification/logs；结构/冻结核验见 source_audit.json；回归汇总见 regression_results.json。
+
+必须知晓的既有边界（未以“修复”为由改写已冻结的 FSM）
+1. MAC 接收握手：afdx_rx 的 ff_rx_rdy 仍仅在 S_IDLE 为高。现有仿真按帧首等待后连续送字节；如果外部 MAC 按逐字节 ready 交付数据，会在首字节后停住。这需要调整该驱动或在 MAC 与当前接口之间明确增加整帧适配层，当前测试不能证明真实 MAC 对接可用。
+2. 接收提交：收到 SN 后按原状态链执行 IC/RM/提交，没有等待整个以太网 EOP。末尾填充期间才到达的 MAC/CRC 错误可能晚于提交；不能声称完整帧错误过滤已经验证。
+3. 发送停顿：S_WAIT 保留原 BAG 等待超时；S_BUILD 在 MAC ready 永久为低时没有退出超时。当前修复保证有限停顿后的字节正确，不解决永久停顿。
+4. SNMP 为固定模板单对象查询子集：request-id 固定回零，不能完整回显请求 OID；GETNEXT 没有完整遍历语义，SET 不响应，BER 长长度处理不完整。解码可能在 OID 结束即完成而未读剩余 NULL TLV，因此队列/SAP 端口可能不出队。此次编码/查询测试不等于标准 SNMP 互通验收。
+5. 615A 为现有简化 TFTP 数据装载链：缺少完整块序列、重传去重、超长和异常报文处理；Flash 只是逻辑擦除/写命令，未包含真实 SPI/Busy 时序，data_loader 的器件侧输出仍未引出。文件名与 CRC 保留原占位。FIFO 集成通过不等于完整 ARINC 615A 文件加载或实际 Flash 烧写。
+6. RTC 接收只消费固定十字节报文。短报文和额外尾字节可能使队列保留；主模式接收校正路径沿用原实现。当前 RTC 计数按工程约定使用微秒，不宣称标准时间同步协议互通。
+7. cfg_ic_mode=1 奇偶模式、接收侧 cfg_bag 流量监控未实现；双网物理接口没有新增，顶层仍按原单 MAC 接口组织。
+8. 帧尾事件 FIFO 仍为 8 深度，无帧尾反压，不能保证无限持续超过输出吞吐的输入事件不溢出。VL 表寻址与缓冲槽位都沿用原 VLID 低位映射，软件须避免地址/槽位冲突。
+
+资源与平台验证边界
+- 使用现有固定规格 IP：VL 地址 12 位、状态 64 位、字节通路 8 位、端口缓冲地址 15 位。
+- 状态字段隔离增加 262144 bit RAM；热复位保护增加 8192 个有效位及少量对齐寄存器。最终资源、时序和器件适配须以 eLinx 完整综合/实现结果为准。
+- 本机未找到可运行的 eLinx 综合器；未伪造 eLinx 综合成功、布局布线、时序收敛或上板结果。
+- 原 afdx.edc 是空文件，未编造板卡引脚和时钟约束。竞赛板 MAC/PHY、时钟、复位及引脚约束仍需按实际硬件完成。
+- 保留厂商生成的 8 种 IP 定义；vl_state_ip 在当前包装层例化两次。IP 元数据原来的 F 盘绝对路径已定位到当前副本，.v 内容未变。
+
+打开与复现（在解压后的本工程根目录执行）
+先打开 elinx/afdx.epr，顶层为 AFDX_top。移动或重新解压工程后，先刷新 IP 元数据路径：
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\relocate_ip_paths.ps1
+复核接口、FSM、逐行注释和厂商 IP 未改：
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\check_source.ps1
+运行仿真（将路径替换为本机 ModelSim win64 安装目录）：
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\run_regression.ps1 -ModelSimBin 'D:\LeStoreDownload\win64'
+此脚本编译自有 RTL + sim/ip_sim_models.v；不要同时编译同名真 IP，以免重定义。默认构建目录为 sim_build，可用 -BuildDir 指定。
+在安装 eLinx 的机器运行离线前端检查：
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\run_elinx_check.ps1 -ELinxRoot 'D:\eLinx\eLinx3.0'
+前端检查沿用原脚本对 FIFO 黑盒处理，不能代替 GUI 的 Run Synthesis / Run Implementation / 板级时序验收。
+以上 ExecutionPolicy 参数仅对本次 PowerShell 进程生效，不修改系统执行策略。
+
+双网冗余与板级顶层补充（2026-10-23）
+1. 新增 elinx/rtl/top.v：板级顶层，封装 pll（50MHz 输入→125MHz c0）、eth_1/eth_2（A/B 两网三速以太网 MAC）与 AFDX_top；内部复位 = 外部复位 & PLL 锁定。
+2. 新增 elinx/rtl/afdx_net_rx.v：A/B 两网各一片 8bit×4096 帧缓存（rx_frame_buf IP）。MAC 侧整帧写入缓存并登记描述符，选路器在 AFDX 接收核心空闲时按轮转把整帧串行送给核心，同时给出 frame_net，使 afdx_rx 的完整性检查/冗余管理能看到两份副本并计 rm_drop。缓存空间不足、描述符已满或单帧超过 1536 字节时整帧丢弃（不写缓存，回退写指针）。
+3. 发送侧：AFDX 核心只有一路 ff_tx 字节流，top 同时写进两片 MAC，两片 MAC 的 ff_tx_rdy 都就绪才允许核心前进，因此两网发送内容完全一致。
+4. AFDX_top 新增 input rx_frame_net，REDUNDANCY_EN 默认改为 1（双网）；单网仿真仍可显式传 0。tb_afdx_top/tb_afdx_rxtx 已补接 1'b0。
+5. local_rtc 的 1us 分频按 125MHz 改为 US_DIV=125（原来按 100MHz 写成 100）；对应 tb_local_rtc_regression、tb_rtc_sync、tb_afdx_top 已改到 125MHz。AFDX 核心与两片 MAC 的用户侧时钟统一为 125MHz。
+6. 工程文件：afdx.epr 增加 top.v/afdx_net_rx.v，综合顶层改为 top；afdx.qsf、elinx/rtl/filelist.f、afdx_synth_check.ys 同步更新；sim/ip_sim_models.v 增加 rx_frame_buf 行为模型；新增 sim/tb_afdx_net_rx.v 单元用例（A/B 单帧、双网轮转、核心未就绪、错误标记、超长帧丢弃）。
+7. 验证结果：ModelSim 2020.4 模块级回归 19 个用例全部 PASS（17 个自检 + 2 个波形激励，含新增 tb_afdx_net_rx）；eLinx CLI 综合前端层次检查通过（Yosys execute success，-top top）。
+8. 尚未进行：top 的板级联合仿真（需要厂商 MAC/PLL 仿真模型与 PHY 行为模型）、引脚约束、eLinx GUI 综合/布局布线/时序与上板验收。

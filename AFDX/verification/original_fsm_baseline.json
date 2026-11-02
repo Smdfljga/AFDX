@@ -1,0 +1,848 @@
+﻿{
+    "date":  "2026-10-17",
+    "source":  "C:/Users/lenovo/Desktop/AFDX_副本_部分/AFDX_副本_部分",
+    "files":  [
+                  {
+                      "file":  "afdx_port_buf.v",
+                      "tokenSha256":  "508a5eb734f12f8224f7094c97a6d8cae7adcdafade0f0fc9199e4fc8738661c",
+                      "protected":  {
+                                        "header":  "moduleafdx_port_buf#(parameterDATA_WIDTH=8,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterVL_IND_WIDTH=7,parameterVL_INDEX_SNMP=4\u0027d1,parameterVL_INDEX_615A=4\u0027d2,parameterVL_INDEX_RTC=4\u0027d3)(inputwireclk,inputwirerst_b,inputwirerx_wr_en,inputwire[VL_INDEX_WIDTH-1:0]rx_wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]rx_wr_byte_offset,inputwire[DATA_WIDTH-1:0]rx_wr_data,inputwirerx_wr_frame_done,inputwire[15:0]rx_wr_frame_len,inputwirerx_wr_queue_mode,outputwirerx_wr_full,inputwireapp_rd_req,inputwire[VL_INDEX_WIDTH-1:0]app_rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]app_rd_byte_offset,outputwireapp_rd_valid,inputwiresnmp_rd_req,inputwire[BYTE_OFFSET_WIDTH-1:0]snmp_rd_byte_offset,outputwiresnmp_rd_valid,inputwiredl_rd_req,inputwire[BYTE_OFFSET_WIDTH-1:0]dl_rd_byte_offset,outputwiredl_rd_valid,inputwirertc_rd_req,inputwire[BYTE_OFFSET_WIDTH-1:0]rtc_rd_byte_offset,outputwirertc_rd_valid,outputwire[DATA_WIDTH-1:0]rx_rd_data,outputwire[15:0]app_rd_frame_len,outputwire[3:0]app_rd_frame_cnt,outputwire[15:0]snmp_rd_frame_len,outputwire[3:0]snmp_rd_frame_cnt,outputwire[15:0]dl_rd_frame_len,outputwire[3:0]dl_rd_frame_cnt,outputwire[15:0]rtc_rd_frame_len,outputwire[3:0]rtc_rd_frame_cnt,inputwireapp_wr_req,inputwire[VL_IND_WIDTH-1:0]app_wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]app_wr_byte_offset,inputwire[DATA_WIDTH-1:0]app_wr_data,inputwireapp_frame_done,inputwiresnmp_wr_req,inputwire[BYTE_OFFSET_WIDTH-1:0]snmp_wr_byte_offset,inputwire[DATA_WIDTH-1:0]snmp_wr_data,inputwiresnmp_frame_done,inputwiredl_wr_req,inputwire[BYTE_OFFSET_WIDTH-1:0]dl_wr_byte_offset,inputwire[DATA_WIDTH-1:0]dl_wr_data,inputwiredl_frame_done,inputwirertc_wr_req,inputwire[BYTE_OFFSET_WIDTH-1:0]rtc_wr_byte_offset,inputwire[DATA_WIDTH-1:0]rtc_wr_data,inputwirertc_frame_done,inputwiretx_rd_en,inputwire[VL_INDEX_WIDTH-1:0]tx_rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]tx_rd_byte_offset,outputwire[DATA_WIDTH-1:0]tx_rd_data,outputwiretx_rd_valid,inputwire[15:0]tx_payload_len,inputwire[15:0]abort_vl,outputwireapp_wr_gnt,outputwiresnmp_wr_gnt,outputwiredl_wr_gnt,outputwirertc_wr_gnt);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ],
+                                        "assigns":  [
+
+                                                    ]
+                                    }
+                  },
+                  {
+                      "file":  "afdx_rx.v",
+                      "tokenSha256":  "03d82d3b95da94e960220c38a3d96231a8daaa801f1cb451841c4b439e3c6c70",
+                      "protected":  {
+                                        "header":  "moduleafdx_rx#(parameterDATA_WIDTH=8,parameterVLID_WIDTH=16,parameterVL_ADDR_WIDTH=12,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterCNT_WIDTH=32,parameterSTATE_WIDTH=64,parameterVL_INDEX_SNMP=4\u0027d1,parameterVL_INDEX_615A=4\u0027d2,parameterVL_INDEX_RTC=4\u0027d3)(inputwireclk,inputwirerst_b,inputwire[DATA_WIDTH-1:0]ff_rx_data,inputwireff_rx_data_vld,inputwireff_rx_sop,inputwireff_rx_eop,inputwireff_rx_err,outputwireff_rx_rdy,inputwireframe_net,outputwire[VL_ADDR_WIDTH-1:0]cfg_addr,outputwirecfg_rd_en,inputwire[VLID_WIDTH-1:0]cfg_tag,inputwirecfg_valid,inputwire[1:0]cfg_port_type,inputwire[15:0]cfg_udp_port,inputwire[15:0]cfg_bag,inputwire[15:0]cfg_lmax,inputwirecfg_rm_en,inputwirecfg_ic_mode,outputwire[VL_ADDR_WIDTH-1:0]st_addr,outputwirest_rd_en,inputwire[STATE_WIDTH-1:0]st_rd_data,outputwirest_wr_en,outputwire[STATE_WIDTH-1:0]st_wr_data,outputwireport_wr_en,outputwire[VL_INDEX_WIDTH-1:0]port_wr_vl_index,outputwire[BYTE_OFFSET_WIDTH-1:0]port_wr_byte_offset,outputwire[DATA_WIDTH-1:0]port_wr_data,outputwire[1:0]port_type,outputwirerx_ready_app,outputwirerx_ready_snmp,outputwirerx_ready_615a,outputwirerx_ready_rtc,outputwireport_wr_frame_done,outputwire[15:0]port_wr_frame_len,outputwireport_wr_queue_mode,inputwireport_wr_full,outputwire[VL_ADDR_WIDTH-1:0]mib_addr,outputwiremib_rx_frame_inc,outputwiremib_rx_error_inc,outputwiremib_sn_error_inc,outputwiremib_rm_drop_inc,outputwiremib_rx_byte_inc,outputwireirq_rx_frame,outputwireirq_error);",
+                                        "stateParams":  [
+                                                            "localparamS_IDLE=5\u0027d0;",
+                                                            "localparamS_MAC_DA=5\u0027d1;",
+                                                            "localparamS_MAC_SA=5\u0027d2;",
+                                                            "localparamS_MAC_TYPE=5\u0027d3;",
+                                                            "localparamS_VL_LOOKUP=5\u0027d4;",
+                                                            "localparamS_IP_PARSE=5\u0027d5;",
+                                                            "localparamS_FRAG_CHECK=5\u0027d6;",
+                                                            "localparamS_UDP_PARSE=5\u0027d7;",
+                                                            "localparamS_PORT_CHECK=5\u0027d8;",
+                                                            "localparamS_PAYLOAD=5\u0027d9;",
+                                                            "localparamS_SN_RECV=5\u0027d10;",
+                                                            "localparamS_IC_CHECK=5\u0027d11;",
+                                                            "localparamS_RM_SINGLE=5\u0027d12;",
+                                                            "localparamS_DISPATCH=5\u0027d13;",
+                                                            "localparamS_MIB_BYTES=5\u0027d14;",
+                                                            "localparamS_DROP=5\u0027d15;",
+                                                            "localparamS_DONE=5\u0027d16;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_state=state;drop_req=1\u0027b0;drop_sn_err_req=1\u0027b0;drop_rm_drop_req=1\u0027b0;if(ff_rx_err\u0026\u0026(state!=S_IDLE)\u0026\u0026(state!=S_DROP)\u0026\u0026(state!=S_DONE))drop_req=1\u0027b1;case(state)S_IDLE:beginif(ff_rx_data_vld\u0026\u0026ff_rx_sop)nxt_state=S_MAC_DA;endS_MAC_DA:beginif(ff_rx_data_vld)beginif(ff_rx_eop)drop_req=1\u0027b1;elseif(da_cnt==3\u0027d5)nxt_state=S_MAC_SA;endendS_MAC_SA:beginif(ff_rx_data_vld)beginif(ff_rx_eop)drop_req=1\u0027b1;elseif(sa_cnt==3\u0027d5)nxt_state=S_MAC_TYPE;endendS_MAC_TYPE:beginif(ff_rx_data_vld)beginif(ff_rx_eop)drop_req=1\u0027b1;elseif(type_cnt==2\u0027d1)beginif({type_acc[7:0],ff_rx_data}==16\u0027h0800)nxt_state=S_VL_LOOKUP;elsedrop_req=1\u0027b1;endendendS_VL_LOOKUP:beginif(config_hit)beginif(ff_rx_data_vld\u0026\u0026ff_rx_eop)drop_req=1\u0027b1;elsenxt_state=S_IP_PARSE;endelsedrop_req=1\u0027b1;endS_IP_PARSE:beginif(ff_rx_data_vld)beginif(ff_rx_eop)drop_req=1\u0027b1;elseif(ip_cnt==5\u0027d19)beginif(ip_mf||(ip_frag_off!=13\u0027d0))drop_req=1\u0027b1;elsenxt_state=S_UDP_PARSE;endendendS_UDP_PARSE:beginif(ff_rx_data_vld)beginif(ff_rx_eop)drop_req=1\u0027b1;elseif(udp_cnt==4\u0027d7)beginif(port_ok\u0026\u0026data_len_ok\u0026\u0026!port_wr_full)nxt_state=S_PAYLOAD;elsedrop_req=1\u0027b1;endendendS_PAYLOAD:beginif(ff_rx_data_vld)beginif(ff_rx_eop)drop_req=1\u0027b1;elseif(pay_cnt==data_len_w-16\u0027d1)nxt_state=S_SN_RECV;endendS_SN_RECV:beginif(ff_rx_data_vld)nxt_state=S_IC_CHECK;elseif(ff_rx_eop)drop_req=1\u0027b1;endS_IC_CHECK:beginif(!psn_valid||sn_expect)nxt_state=S_RM_SINGLE;elseif(cross_dup)nxt_state=S_RM_SINGLE;elsebegindrop_sn_err_req=1\u0027b1;drop_req=1\u0027b1;endendS_RM_SINGLE:beginif(ic_cross_dup)beginif(cfg_rm_en_r)begindrop_rm_drop_req=1\u0027b1;drop_req=1\u0027b1;endelsebegindrop_sn_err_req=1\u0027b1;drop_req=1\u0027b1;endendelsenxt_state=S_DISPATCH;endS_DISPATCH:beginif(!port_wr_full)nxt_state=S_MIB_BYTES;elsedrop_req=1\u0027b1;endS_MIB_BYTES:beginif(byte_left\u003c=16\u0027d1)nxt_state=S_DONE;endS_DROP:beginif(ff_rx_eop||eop_seen_r)nxt_state=S_DONE;endS_DONE:beginnxt_state=S_IDLE;enddefault:beginnxt_state=S_IDLE;endendcaseif(drop_req\u0026\u0026(state!=S_DROP)\u0026\u0026(state!=S_DONE))nxt_state=S_DROP;end"
+                                                 ],
+                                        "updates":  [
+                                                        "state\u003c=S_IDLE;",
+                                                        "state\u003c=nxt_state;"
+                                                    ],
+                                        "assigns":  [
+                                                        "assigncfg_addr=vl_addr;",
+                                                        "assignst_addr=vl_addr;",
+                                                        "assigncfg_rd_en=(state==S_MAC_DA)\u0026\u0026(da_cnt==3\u0027d5);",
+                                                        "assignst_rd_en=(state==S_MAC_DA)\u0026\u0026(da_cnt==3\u0027d5);",
+                                                        "assignport_wr_en=(state==S_PAYLOAD)\u0026\u0026ff_rx_data_vld\u0026\u0026(pay_cnt\u003cdata_len_w);",
+                                                        "assignport_wr_vl_index=vlid_r[VL_INDEX_WIDTH-1:0];",
+                                                        "assignport_wr_byte_offset=pay_cnt[BYTE_OFFSET_WIDTH-1:0];",
+                                                        "assignport_wr_data=ff_rx_data;",
+                                                        "assignport_type=cfg_port_type_r;",
+                                                        "assignport_wr_queue_mode=(cfg_port_type_r!=2\u0027d0);",
+                                                        "assignport_wr_frame_done=(state==S_DISPATCH)\u0026\u0026!port_wr_full;",
+                                                        "assignport_wr_frame_len=data_len_w;",
+                                                        "assignmib_addr=vl_addr;",
+                                                        "assignmib_rx_frame_inc=(state==S_DISPATCH)\u0026\u0026!port_wr_full;",
+                                                        "assignmib_rx_error_inc=drop_entry\u0026\u0026!drop_rm_drop;",
+                                                        "assignmib_sn_error_inc=drop_entry\u0026\u0026drop_sn_err;",
+                                                        "assignmib_rm_drop_inc=drop_entry\u0026\u0026drop_rm_drop;",
+                                                        "assignmib_rx_byte_inc=(state==S_MIB_BYTES)\u0026\u0026(byte_left!=16\u0027d0);",
+                                                        "assignirq_rx_frame=(state==S_DISPATCH)\u0026\u0026!port_wr_full;",
+                                                        "assignirq_error=drop_entry;",
+                                                        "assignff_rx_rdy=(state==S_IDLE);",
+                                                        "assignrx_ready_snmp=dispatch_ok\u0026\u0026is_snmp_slot;",
+                                                        "assignrx_ready_615a=dispatch_ok\u0026\u0026is_615a_slot;",
+                                                        "assignrx_ready_rtc=dispatch_ok\u0026\u0026is_rtc_slot;",
+                                                        "assignrx_ready_app=dispatch_ok\u0026\u0026!is_snmp_slot\u0026\u0026!is_615a_slot\u0026\u0026!is_rtc_slot;",
+                                                        "assignst_wr_en=((state==S_DISPATCH)\u0026\u0026psn_write_en\u0026\u0026!port_wr_full)||((state==S_DROP)\u0026\u0026psn_write_en\u0026\u0026drop_entry);",
+                                                        "assignst_wr_data={st_rd_data[STATE_WIDTH-1:9],1\u0027b1,psn_write_val};"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "reg[4:0]state;",
+                                                               "reg[4:0]nxt_state;"
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "AFDX_top.v",
+                      "tokenSha256":  "0f3a48a9be1361759e9d2881ff4b379902a639909539f528e9764fbe8f3c94b6",
+                      "protected":  {
+                                        "header":  "moduleAFDX_top#(parameterVLID_WIDTH=16,parameterVL_ADDR_WIDTH=12,parameterDATA_WIDTH=8,parameterCNT_WIDTH=32,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterRTC_WIDTH=48,parameterSTATE_WIDTH=64,parameterREDUNDANCY_EN=1\u0027b1,parameterVL_INDEX_SNMP=4\u0027d1,parameterVL_INDEX_615A=4\u0027d2,parameterVL_INDEX_RTC=4\u0027d3,parameterRTC_MASTER_MODE=1\u0027b0,parameterRTC_SYNC_PERIOD=16\u0027d10,parameterRTC_PROC_DELAY=32\u0027d100)(inputwireclk_sys,inputwirerst_b,inputwire[DATA_WIDTH-1:0]ff_rx_data,inputwireff_rx_data_vld,inputwireff_rx_sop,inputwireff_rx_eop,inputwireff_rx_err,outputwireff_rx_rdy,inputwirerx_frame_net,outputwire[DATA_WIDTH-1:0]ff_tx_data,outputwireff_tx_wren,outputwireff_tx_sop,outputwireff_tx_eop,outputwireff_tx_err,inputwireff_tx_rdy,inputwirecfg_wr_en,inputwire[VL_ADDR_WIDTH-1:0]cfg_wr_addr,inputwire[VLID_WIDTH-1:0]cfg_wr_vlid,inputwire[15:0]cfg_wr_udp_port,inputwire[1:0]cfg_wr_port_type,inputwire[15:0]cfg_wr_bag,inputwire[15:0]cfg_wr_lmax,inputwirecfg_wr_rm_en,inputwirecfg_wr_ic_mode,outputwirecfg_done,inputwire[VL_INDEX_WIDTH-1:0]app_rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]app_rd_byte_offset,inputwireapp_rd_en,outputwire[DATA_WIDTH-1:0]app_rd_data,outputwireapp_rd_valid,outputwire[15:0]app_rd_frame_len,outputwire[3:0]app_rd_frame_cnt,inputwireapp_wr_en,inputwire[6:0]app_wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]app_wr_byte_offset,inputwire[DATA_WIDTH-1:0]app_wr_data,inputwireapp_tx_req,outputwireapp_wr_gnt,outputwire[RTC_WIDTH-1:0]local_rtc,outputwirertc_sync_valid,outputwireirq_rx_frame,outputwireirq_tx_done,outputwireirq_error);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "afdx_tx.v",
+                      "tokenSha256":  "6f8f70bc68c60aa1a317a8515d9acdae3e0f0e8f1ce1ecf1f1ec242b2bab93bb",
+                      "protected":  {
+                                        "header":  "moduleafdx_tx#(parameterDATA_WIDTH=8,parameterVLID_WIDTH=16,parameterVL_ADDR_WIDTH=12,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterCNT_WIDTH=32,parameterSTATE_WIDTH=64,parameterVL_INDEX_SNMP=4\u0027d1,parameterVL_INDEX_615A=4\u0027d2,parameterVL_INDEX_RTC=4\u0027d3)(inputwireclk,inputwirerst_b,inputwire[31:0]sys_ts,outputwire[DATA_WIDTH-1:0]ff_tx_data,outputwireff_tx_wren,outputwireff_tx_sop,outputwireff_tx_eop,outputwireff_tx_err,inputwireff_tx_rdy,inputwire[(1\u003c\u003cVL_INDEX_WIDTH)*VLID_WIDTH-1:0]slot_vlid,outputwire[VL_ADDR_WIDTH-1:0]cfg_addr,outputwirecfg_rd_en,inputwire[VLID_WIDTH-1:0]cfg_tag,inputwirecfg_valid,inputwire[1:0]cfg_port_type,inputwire[15:0]cfg_udp_port,inputwire[15:0]cfg_bag,inputwire[15:0]cfg_lmax,inputwirecfg_rm_en,outputwire[VL_ADDR_WIDTH-1:0]st_addr,outputwirest_rd_en,inputwire[STATE_WIDTH-1:0]st_rd_data,outputwirest_wr_en,outputwire[STATE_WIDTH-1:0]st_wr_data,outputwireport_rd_en,outputwire[VL_INDEX_WIDTH-1:0]port_rd_vl_index,outputwire[BYTE_OFFSET_WIDTH-1:0]port_rd_byte_offset,inputwire[DATA_WIDTH-1:0]port_rd_data,inputwireport_rd_valid,inputwire[15:0]port_payload_len,outputwire[15:0]abort_vl,inputwiretx_valid_app,inputwiretx_valid_snmp,inputwiretx_valid_615a,inputwiretx_valid_rtc,outputwire[VL_ADDR_WIDTH-1:0]mib_addr,outputwiremib_tx_frame_inc,outputwiremib_tx_byte_inc,outputwiremib_tx_error_inc,outputwiremib_tx_frag_inc,outputwiremib_tx_bag_inc,outputwireirq_tx_done);",
+                                        "stateParams":  [
+                                                            "localparamS_IDLE=4\u0027d0;",
+                                                            "localparamS_SCAN=4\u0027d1;",
+                                                            "localparamS_CFG_READ=4\u0027d2;",
+                                                            "localparamS_STATE_READ=4\u0027d3;",
+                                                            "localparamS_DECIDE=4\u0027d4;",
+                                                            "localparamS_WAIT=4\u0027d5;",
+                                                            "localparamS_PAYLOAD_RD=4\u0027d6;",
+                                                            "localparamS_BUILD=4\u0027d7;",
+                                                            "localparamS_FINISH=4\u0027d8;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_state=state;case(state)S_IDLE:beginif(app_scan)nxt_state=S_SCAN;elseif(pending_ready!=16\u0027d0)nxt_state=S_CFG_READ;endS_SCAN:beginnxt_state=S_IDLE;endS_CFG_READ:beginnxt_state=S_STATE_READ;endS_STATE_READ:beginnxt_state=S_DECIDE;endS_DECIDE:beginif(!(cfg_valid\u0026\u0026(cfg_tag==vlid_r)))nxt_state=S_FINISH;elseif(port_payload_len==16\u0027d0)nxt_state=S_FINISH;elseif((port_payload_len\u003ecfg_lmax)||(port_payload_len\u003e16\u0027d1471))nxt_state=S_FINISH;elseif(!bag_due)nxt_state=S_IDLE;elsenxt_state=S_PAYLOAD_RD;endS_WAIT:beginif(bag_due)nxt_state=S_PAYLOAD_RD;elseif(wait_cnt==24\u0027hFFFFFF)nxt_state=S_FINISH;endS_PAYLOAD_RD:beginnxt_state=S_BUILD;endS_BUILD:beginif(ff_tx_rdy\u0026\u0026(tx_byte_pos==frame_total_r-16\u0027d1))nxt_state=S_FINISH;endS_FINISH:beginnxt_state=S_IDLE;enddefault:beginnxt_state=S_IDLE;endendcaseend"
+                                                 ],
+                                        "updates":  [
+                                                        "state\u003c=S_IDLE;",
+                                                        "state\u003c=nxt_state;"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "reg[3:0]state;",
+                                                               "reg[3:0]nxt_state;"
+                                                           ],
+                                        "assigns":  [
+                                                        "assigncfg_addr=vlid_r[VL_ADDR_WIDTH-1:0];",
+                                                        "assigncfg_rd_en=(state==S_CFG_READ);",
+                                                        "assignst_addr=vlid_r[VL_ADDR_WIDTH-1:0];",
+                                                        "assignst_rd_en=(state==S_CFG_READ);",
+                                                        "assignport_rd_vl_index=(state==S_SCAN)?scan_idx:sched_idx;",
+                                                        "assignport_rd_en=pay_issue;",
+                                                        "assignport_rd_byte_offset=pay_req_ix[BYTE_OFFSET_WIDTH-1:0];",
+                                                        "assignabort_vl=((state==S_FINISH)\u0026\u0026(finish_kind==2\u0027d1))?(16\u0027d1\u003c\u003csched_idx):16\u0027d0;",
+                                                        "assignff_tx_data=tx_byte;",
+                                                        "assignff_tx_wren=build_active;",
+                                                        "assignff_tx_sop=build_active\u0026\u0026(tx_byte_pos==16\u0027d0);",
+                                                        "assignff_tx_eop=build_active\u0026\u0026(tx_byte_pos==frame_total_r-16\u0027d1);",
+                                                        "assignmib_addr=vlid_r[VL_ADDR_WIDTH-1:0];",
+                                                        "assignmib_tx_frame_inc=finish_success;",
+                                                        "assignmib_tx_byte_inc=build_active\u0026\u0026(tx_byte_pos\u003e=16\u0027d42)\u0026\u0026(tx_byte_pos\u003c16\u0027d42+payload_len_r);",
+                                                        "assignmib_tx_error_inc=finish_error;",
+                                                        "assignmib_tx_frag_inc=finish_error\u0026\u0026frag_error;",
+                                                        "assignmib_tx_bag_inc=bag_pulse;",
+                                                        "assignst_wr_en=finish_success;",
+                                                        "assignst_wr_data={start_ts_r,st_rd_data[31:25],1\u0027b1,next_sn_r,st_rd_data[15:0]};",
+                                                        "assignirq_tx_done=finish_success;",
+                                                        "assignff_tx_err=finish_error;"
+                                                    ]
+                                    }
+                  },
+                  {
+                      "file":  "afdx_vl_cfg.v",
+                      "tokenSha256":  "08c42b15b44c2edf71669e4238ac6a2160d0a6b23882e557bed425123f4fb187",
+                      "protected":  {
+                                        "header":  "moduleafdx_vl_cfg#(parameterVLID_WIDTH=16,parameterVL_ADDR_WIDTH=12,parameterVL_INDEX_WIDTH=4,parameterCNT_WIDTH=32,parameterSTATE_WIDTH=64)(inputwireclk,inputwirerst_b,inputwirecfg_wr_en,inputwire[VL_ADDR_WIDTH-1:0]cfg_wr_addr,inputwire[VLID_WIDTH-1:0]cfg_wr_vlid,inputwire[15:0]cfg_wr_udp_port,inputwire[1:0]cfg_wr_port_type,inputwire[15:0]cfg_wr_bag,inputwire[15:0]cfg_wr_lmax,inputwirecfg_wr_rm_en,inputwirecfg_wr_ic_mode,outputwirecfg_done,inputwire[VL_ADDR_WIDTH-1:0]rx_cfg_addr,inputwirerx_cfg_rd_en,outputwire[VLID_WIDTH-1:0]rx_cfg_tag,outputwirerx_cfg_valid,outputwire[1:0]rx_cfg_port_type,outputwire[15:0]rx_cfg_udp_port,outputwire[15:0]rx_cfg_bag,outputwire[15:0]rx_cfg_lmax,outputwirerx_cfg_rm_en,outputwirerx_cfg_ic_mode,inputwire[VL_ADDR_WIDTH-1:0]tx_cfg_addr,inputwiretx_cfg_rd_en,outputwire[VLID_WIDTH-1:0]tx_cfg_tag,outputwiretx_cfg_valid,outputwire[1:0]tx_cfg_port_type,outputwire[15:0]tx_cfg_udp_port,outputwire[15:0]tx_cfg_bag,outputwire[15:0]tx_cfg_lmax,outputwiretx_cfg_rm_en,inputwire[VL_ADDR_WIDTH-1:0]rx_st_addr,inputwirerx_st_rd_en,outputwire[STATE_WIDTH-1:0]rx_st_rd_data,inputwirerx_st_wr_en,inputwire[STATE_WIDTH-1:0]rx_st_wr_data,inputwire[VL_ADDR_WIDTH-1:0]tx_st_addr,inputwiretx_st_rd_en,outputwire[STATE_WIDTH-1:0]tx_st_rd_data,inputwiretx_st_wr_en,inputwire[STATE_WIDTH-1:0]tx_st_wr_data,inputwire[VL_ADDR_WIDTH-1:0]rx_mib_addr,inputwiremib_rx_frame_inc,inputwiremib_rx_error_inc,inputwiremib_sn_error_inc,inputwiremib_rm_drop_inc,inputwiremib_rx_byte_inc,inputwire[VL_ADDR_WIDTH-1:0]tx_mib_addr,inputwiremib_tx_frame_inc,inputwiremib_tx_byte_inc,inputwiremib_tx_error_inc,inputwiremib_tx_frag_inc,inputwiremib_tx_bag_inc,inputwiremib_sel,inputwire[VL_ADDR_WIDTH-1:0]mib_rd_addr,inputwiremib_rd_en,outputwire[5*CNT_WIDTH-1:0]mib_rd_data,outputwire[(1\u003c\u003cVL_INDEX_WIDTH)*VLID_WIDTH-1:0]slot_vlid);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ],
+                                        "assigns":  [
+
+                                                    ]
+                                    }
+                  },
+                  {
+                      "file":  "config_wr.v",
+                      "tokenSha256":  "84d70a65df560804af517f84c574d9765e86480791665f718599998216e7272b",
+                      "protected":  {
+                                        "header":  "moduleconfig_wr#(parameterVLID_WIDTH=16,parameterVL_ADDR_WIDTH=12)(inputwireclk,inputwirerst_b,inputwirecfg_wr_en,inputwire[VL_ADDR_WIDTH-1:0]cfg_wr_addr,inputwire[VLID_WIDTH-1:0]cfg_wr_vlid,inputwire[15:0]cfg_wr_udp_port,inputwire[1:0]cfg_wr_port_type,inputwire[15:0]cfg_wr_bag,inputwire[15:0]cfg_wr_lmax,inputwirecfg_wr_rm_en,inputwirecfg_wr_ic_mode,outputwirebram_wr_en,outputwire[VL_ADDR_WIDTH-1:0]bram_wr_addr,outputwirecfg_done);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "data_loader_615a.v",
+                      "tokenSha256":  "d1b4730c10cf6250e4f2a774154e499b3e180ee3eaafb85c8f8524a09b30f240",
+                      "protected":  {
+                                        "header":  "moduledata_loader_615a#(parameterDATA_WIDTH=8,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterVL_INDEX_SELF=4\u0027d2)(inputwireclk,inputwirerst_b,inputwirerx_ready_615a,outputwirerx_rd_req,outputwire[BYTE_OFFSET_WIDTH-1:0]rx_rd_byte_offset,inputwire[DATA_WIDTH-1:0]rx_rd_data,inputwirerx_rd_valid,inputwire[15:0]rx_frame_len,outputwiretx_wr_en,outputwire[BYTE_OFFSET_WIDTH-1:0]tx_wr_byte_offset,outputwire[DATA_WIDTH-1:0]tx_wr_data,outputwiretx_frame_done,inputwiretx_wr_gnt,outputwireload_busy,outputwireload_done,outputwireload_error);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "delay_comp.v",
+                      "tokenSha256":  "733380b9df20eb992a5cb249384e154e95c89876eeb9a860001f3e2626331523",
+                      "protected":  {
+                                        "header":  "moduledelay_comp#(parameterRTC_WIDTH=48)(inputwireclk,inputwirerst_b,inputwire[RTC_WIDTH-1:0]master_ts,inputwire[31:0]delay_val,inputwire[31:0]rx_process_delay,inputwirecalc_req,outputwire[RTC_WIDTH-1:0]corrected_ts,outputwirecalc_done);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "file_buffer.v",
+                      "tokenSha256":  "72435e0e275bc14a3923f20708f696e1bb53ec75bdac49a1af545a527cc4798f",
+                      "protected":  {
+                                        "header":  "modulefile_buffer#(parameterDATA_WIDTH=8,parameterFIFO_DEPTH=512)(inputwireclk,inputwirerst_b,inputwirewr_req,inputwire[DATA_WIDTH-1:0]data,inputwirerd_req,outputwire[DATA_WIDTH-1:0]q,outputwirerdempty,outputwirerdfull,outputwire[8:0]wrusedw);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "file_table.v",
+                      "tokenSha256":  "ed8229ced3e9699043b19d3d0c5ad37f952d26ce1c10235fd7b1a52fcf53e65c",
+                      "protected":  {
+                                        "header":  "modulefile_table#(parameterFILE_NAME_WIDTH=64,parameterFILE_SIZE_WIDTH=32)(inputwireclk,inputwirerst_b,inputwirewr_en,inputwire[3:0]wr_index,inputwire[FILE_NAME_WIDTH-1:0]wr_name,inputwire[FILE_SIZE_WIDTH-1:0]wr_size,inputwire[31:0]wr_crc,inputwirerd_en,inputwire[3:0]rd_index,outputwire[FILE_NAME_WIDTH-1:0]rd_name,outputwire[FILE_SIZE_WIDTH-1:0]rd_size,outputwire[31:0]rd_crc);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "flash_ctrl.v",
+                      "tokenSha256":  "2205a3239dea09dd90a1ba809b8c3a1c6cc3985b92c90631da13f2999f034fc0",
+                      "protected":  {
+                                        "header":  "moduleflash_ctrl#(parameterDATA_WIDTH=8)(inputwireclk,inputwirerst_b,inputwirewr_req,inputwire[23:0]wr_addr,inputwire[DATA_WIDTH-1:0]wr_data,outputwirewr_done,outputwireflash_wr_en,outputwire[23:0]flash_wr_addr,outputwire[DATA_WIDTH-1:0]flash_wr_data,outputwireflash_erase);",
+                                        "stateParams":  [
+                                                            "localparamS_IDLE=2\u0027d0;",
+                                                            "localparamS_ERASE=2\u0027d1;",
+                                                            "localparamS_WRITE=2\u0027d2;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_state=state;case(state)S_IDLE:beginif(wr_req)beginif(erased_valid\u0026\u0026(erased_sector==wr_addr[23:12]))nxt_state=S_WRITE;elsenxt_state=S_ERASE;endendS_ERASE:beginnxt_state=S_WRITE;endS_WRITE:beginnxt_state=S_IDLE;enddefault:beginnxt_state=S_IDLE;endendcaseend"
+                                                 ],
+                                        "updates":  [
+                                                        "state\u003c=S_IDLE;",
+                                                        "state\u003c=nxt_state;"
+                                                    ],
+                                        "assigns":  [
+                                                        "assignflash_erase=(state==S_ERASE);",
+                                                        "assignflash_wr_en=(state==S_WRITE);",
+                                                        "assignflash_wr_addr=addr_r;",
+                                                        "assignflash_wr_data=data_r;",
+                                                        "assignwr_done=(state==S_WRITE);"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "reg[1:0]state;",
+                                                               "reg[1:0]nxt_state;"
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "local_rtc.v",
+                      "tokenSha256":  "cc53d4b7c054b430d7b40197eef2034db90c7dea95fc953dd623bb9b2ef9c689",
+                      "protected":  {
+                                        "header":  "modulelocal_rtc#(parameterRTC_WIDTH=48)(inputwireclk,inputwirerst_b,inputwiresync_en,inputwire[RTC_WIDTH-1:0]sync_value,inputwire[15:0]sync_period_ms,outputwire[RTC_WIDTH-1:0]rtc_value,outputwirertc_tick);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "mib_query.v",
+                      "tokenSha256":  "eb59fca0b06b7b6b22518fe73231f235870d4c7b3209d4222c6efb652a497c53",
+                      "protected":  {
+                                        "header":  "modulemib_query#(parameterCNT_WIDTH=32,parameterVL_ADDR_WIDTH=12,parameterOID_WIDTH=16)(inputwireclk,inputwirerst_b,inputwirequery_req,inputwire[OID_WIDTH-1:0]oid,outputwiremib_sel,outputwire[VL_ADDR_WIDTH-1:0]mib_addr,outputwiremib_rd_en,inputwire[5*CNT_WIDTH-1:0]mib_rd_data,outputwirequery_done,outputwire[CNT_WIDTH-1:0]query_value);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ],
+                                        "assigns":  [
+
+                                                    ]
+                                    }
+                  },
+                  {
+                      "file":  "mib_ram.v",
+                      "tokenSha256":  "e6de48a4ea30cdba2bb47e55073c6c80eb0a91238731e07f06cd6b8566d41c38",
+                      "protected":  {
+                                        "header":  "modulemib_ram#(parameterCNT_WIDTH=32,parameterADDR_WIDTH=12,parameterIS_RX=1\u0027b1)(inputwireclk,inputwirerst_b,inputwire[ADDR_WIDTH-1:0]inc_addr,inputwirecnt0_inc,inputwirecnt1_inc,inputwirecnt2_inc,inputwirecnt3_inc,inputwirecnt4_inc,inputwire[ADDR_WIDTH-1:0]rd_addr,inputwirerd_en,outputwire[5*CNT_WIDTH-1:0]rd_data);",
+                                        "stateParams":  [
+                                                            "localparamS_IDLE=2\u0027d0;",
+                                                            "localparamS_READ=2\u0027d1;",
+                                                            "localparamS_READ2=2\u0027d3;",
+                                                            "localparamS_WRITE=2\u0027d2;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_state=state;case(state)S_IDLE:beginif(sel_any)nxt_state=S_READ;endS_READ:beginnxt_state=S_READ2;endS_READ2:beginnxt_state=S_WRITE;endS_WRITE:beginnxt_state=S_IDLE;enddefault:beginnxt_state=S_IDLE;endendcaseend"
+                                                 ],
+                                        "updates":  [
+                                                        "state\u003c=S_IDLE;",
+                                                        "state\u003c=nxt_state;"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "reg[1:0]state;",
+                                                               "reg[1:0]nxt_state;"
+                                                           ],
+                                        "assigns":  [
+                                                        "assignmatch_bit[match_i]=bin_valid[match_i]\u0026\u0026(bin_addr[match_i]==inc_addr);",
+                                                        "assignempty_bit[match_i]=!bin_valid[match_i];",
+                                                        "assigncnt_next={cnt4_next,cnt3_next,cnt2_next,cnt1_next,cnt0_next};",
+                                                        "assigncnt_wr=(state==S_WRITE);",
+                                                        "assigncnt_word=cnt_word_ip[5*CNT_WIDTH-1:0];",
+                                                        "assigncnt_next_ip={{RSRV{1\u0027b0}},cnt_next};",
+                                                        "assignrd_data=rd_data_ip[5*CNT_WIDTH-1:0];"
+                                                    ]
+                                    }
+                  },
+                  {
+                      "file":  "rtc_rx.v",
+                      "tokenSha256":  "64507f65daf00878a113cbf55cb34b75bb1b4542db3c177dc763198a5f94a730",
+                      "protected":  {
+                                        "header":  "modulertc_rx#(parameterDATA_WIDTH=8,parameterRTC_WIDTH=48,parameterBYTE_OFFSET_WIDTH=11)(inputwireclk,inputwirerst_b,inputwirestart,inputwire[15:0]rx_frame_len,outputwirerx_rd_req,outputwire[BYTE_OFFSET_WIDTH-1:0]rx_rd_byte_offset,inputwire[DATA_WIDTH-1:0]rx_rd_data,inputwirerx_rd_valid,outputwire[RTC_WIDTH-1:0]master_ts,outputwire[31:0]delay_val,outputwirerx_valid);",
+                                        "stateParams":  [
+                                                            "localparamS_IDLE=2\u0027d0;",
+                                                            "localparamS_RD=2\u0027d1;",
+                                                            "localparamS_DONE=2\u0027d2;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_state=state;case(state)S_IDLE:beginif(start\u0026\u0026(rx_frame_len\u003e=16\u0027d10))nxt_state=S_RD;endS_RD:beginif(rx_rd_valid)beginif(rd_ptr\u003c11\u0027d10)beginif(rd_ptr==11\u0027d9)nxt_state=S_DONE;endelsenxt_state=S_DONE;endelseif(rd_ptr\u003e=rx_frame_len)nxt_state=S_IDLE;endS_DONE:beginnxt_state=S_IDLE;enddefault:beginnxt_state=S_IDLE;endendcaseend"
+                                                 ],
+                                        "updates":  [
+                                                        "state\u003c=S_IDLE;",
+                                                        "state\u003c=nxt_state;"
+                                                    ],
+                                        "assigns":  [
+                                                        "assignrx_rd_req=(state==S_RD)\u0026\u0026(rd_ptr\u003crx_frame_len);",
+                                                        "assignrx_rd_byte_offset=rd_ptr;",
+                                                        "assignmaster_ts=master_r;",
+                                                        "assigndelay_val=delay_r;",
+                                                        "assignrx_valid=(state==S_DONE);"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "reg[1:0]state;",
+                                                               "reg[1:0]nxt_state;"
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "rtc_sync.v",
+                      "tokenSha256":  "488b8f457f673e40a4882d3523061f738228b42062051b1c96e23e67f45233cf",
+                      "protected":  {
+                                        "header":  "modulertc_sync#(parameterDATA_WIDTH=8,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterRTC_WIDTH=48,parameterCNT_WIDTH=32,parameterVL_INDEX_SELF=4\u0027d3)(inputwireclk,inputwirerst_b,inputwirerx_ready_rtc,outputwirerx_rd_req,outputwire[BYTE_OFFSET_WIDTH-1:0]rx_rd_byte_offset,inputwire[DATA_WIDTH-1:0]rx_rd_data,inputwirerx_rd_valid,inputwire[15:0]rx_frame_len,outputwiretx_wr_en,outputwire[BYTE_OFFSET_WIDTH-1:0]tx_wr_byte_offset,outputwire[DATA_WIDTH-1:0]tx_wr_data,outputwiretx_frame_done,inputwiretx_wr_gnt,outputwire[RTC_WIDTH-1:0]local_rtc,outputwirertc_sync_valid,inputwiremaster_mode,inputwire[15:0]sync_period_ms,inputwire[31:0]rx_process_delay);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "rtc_tx.v",
+                      "tokenSha256":  "99523f45d93c87fb7e492ff550b0a492688dca2d3d2ab0f4bb32d1f14d7d3705",
+                      "protected":  {
+                                        "header":  "modulertc_tx#(parameterDATA_WIDTH=8,parameterRTC_WIDTH=48,parameterBYTE_OFFSET_WIDTH=11)(inputwireclk,inputwirerst_b,inputwiretx_req,inputwire[RTC_WIDTH-1:0]local_ts,inputwiretx_wr_gnt,outputwiretx_wr_en,outputwire[BYTE_OFFSET_WIDTH-1:0]tx_wr_byte_offset,outputwire[DATA_WIDTH-1:0]tx_wr_data,outputwiretx_frame_done);",
+                                        "stateParams":  [
+                                                            "localparamS_IDLE=2\u0027d0;",
+                                                            "localparamS_SEND=2\u0027d1;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_state=state;case(state)S_IDLE:beginif(tx_req)nxt_state=S_SEND;endS_SEND:beginif(tx_wr_gnt\u0026\u0026(wr_ptr==11\u0027d9))nxt_state=S_IDLE;enddefault:beginnxt_state=S_IDLE;endendcaseend"
+                                                 ],
+                                        "updates":  [
+                                                        "state\u003c=S_IDLE;",
+                                                        "state\u003c=nxt_state;"
+                                                    ],
+                                        "assigns":  [
+                                                        "assigntx_wr_en=(state==S_SEND);",
+                                                        "assigntx_wr_byte_offset=wr_ptr;",
+                                                        "assigntx_wr_data=out_data_r;",
+                                                        "assigntx_frame_done=(state==S_SEND)\u0026\u0026tx_wr_gnt\u0026\u0026(wr_ptr==11\u0027d9);"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "reg[1:0]state;",
+                                                               "reg[1:0]nxt_state;"
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "rx_port_buf.v",
+                      "tokenSha256":  "dc10dcb4bb4f85648ba373d1d5cb2b6677b7de8c63e111c994040890364a75c3",
+                      "protected":  {
+                                        "header":  "modulerx_port_buf#(parameterDATA_WIDTH=8,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterFRAME_LEN_WIDTH=16,parameterFRAME_CNT_WIDTH=3)(inputwireclk,inputwirerst_b,inputwirewr_en,inputwire[VL_INDEX_WIDTH-1:0]wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]wr_byte_offset,inputwire[DATA_WIDTH-1:0]wr_data,inputwirewr_frame_done,inputwire[FRAME_LEN_WIDTH-1:0]wr_frame_len,inputwirewr_queue_mode,outputwirewr_full,inputwirerd_en,inputwire[VL_INDEX_WIDTH-1:0]rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]rd_byte_offset,outputwire[DATA_WIDTH-1:0]rd_data,outputwirerd_valid,outputwire[(1\u003c\u003cVL_INDEX_WIDTH)*FRAME_LEN_WIDTH-1:0]rd_frame_len_all,outputwire[(1\u003c\u003cVL_INDEX_WIDTH)*(FRAME_CNT_WIDTH+1)-1:0]rd_frame_cnt_all);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ],
+                                        "assigns":  [
+
+                                                    ]
+                                    }
+                  },
+                  {
+                      "file":  "rx_rd_arb.v",
+                      "tokenSha256":  "5be0c27bf2cd8469853c1bf7f6f12e9732060eb6c5045aea765499cedaa90d45",
+                      "protected":  {
+                                        "header":  "modulerx_rd_arb#(parameterDATA_WIDTH=8,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11)(inputwireclk,inputwirerst_b,inputwireapp_rd_req,inputwire[VL_INDEX_WIDTH-1:0]app_rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]app_rd_byte_offset,outputwireapp_rd_valid,inputwiresnmp_rd_req,inputwire[VL_INDEX_WIDTH-1:0]snmp_rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]snmp_rd_byte_offset,outputwiresnmp_rd_valid,inputwiredl_rd_req,inputwire[VL_INDEX_WIDTH-1:0]dl_rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]dl_rd_byte_offset,outputwiredl_rd_valid,inputwirertc_rd_req,inputwire[VL_INDEX_WIDTH-1:0]rtc_rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]rtc_rd_byte_offset,outputwirertc_rd_valid,outputwirebuf_rd_en,outputwire[VL_INDEX_WIDTH-1:0]buf_rd_vl_index,outputwire[BYTE_OFFSET_WIDTH-1:0]buf_rd_byte_offset,inputwire[DATA_WIDTH-1:0]buf_rd_data,outputwire[DATA_WIDTH-1:0]rd_data);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ],
+                                        "assigns":  [
+
+                                                    ]
+                                    }
+                  },
+                  {
+                      "file":  "snmp_agent.v",
+                      "tokenSha256":  "a16bcc89f979ac75df24f6f97585fbe5f2352aba6bb400e1ec6be1c36fe34013",
+                      "protected":  {
+                                        "header":  "modulesnmp_agent#(parameterDATA_WIDTH=8,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterCNT_WIDTH=32,parameterVL_ADDR_WIDTH=12,parameterOID_WIDTH=16,parameterVL_INDEX_SELF=4\u0027d1)(inputwireclk,inputwirerst_b,inputwirerx_ready_snmp,outputwirerx_rd_req,outputwire[BYTE_OFFSET_WIDTH-1:0]rx_rd_byte_offset,inputwire[DATA_WIDTH-1:0]rx_rd_data,inputwirerx_rd_valid,inputwire[15:0]rx_frame_len,outputwiretx_wr_en,outputwire[BYTE_OFFSET_WIDTH-1:0]tx_wr_byte_offset,outputwire[DATA_WIDTH-1:0]tx_wr_data,outputwiretx_frame_done,inputwiretx_wr_gnt,outputwiremib_sel,outputwire[VL_ADDR_WIDTH-1:0]mib_addr,outputwiremib_rd_en,inputwire[5*CNT_WIDTH-1:0]mib_rd_data);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "snmp_decoder.v",
+                      "tokenSha256":  "1f97ffb27ab7cc53dd1c0036a7777b096667abf3e3f55b4b630fcb139917a19a",
+                      "protected":  {
+                                        "header":  "modulesnmp_decoder#(parameterDATA_WIDTH=8,parameterBYTE_OFFSET_WIDTH=11,parameterOID_WIDTH=16)(inputwireclk,inputwirerst_b,inputwirestart,inputwire[15:0]rx_frame_len,outputwirerx_rd_req,outputwire[BYTE_OFFSET_WIDTH-1:0]rx_rd_byte_offset,inputwire[DATA_WIDTH-1:0]rx_rd_data,inputwirerx_rd_valid,outputwirepdu_valid,outputwire[1:0]pdu_type,outputwire[OID_WIDTH-1:0]oid,outputwiredecode_done);",
+                                        "stateParams":  [
+                                                            "localparamP_IDLE=6\u0027d0;",
+                                                            "localparamP_SEQ_TAG=6\u0027d1;",
+                                                            "localparamP_SEQ_LEN=6\u0027d2;",
+                                                            "localparamP_VER_TAG=6\u0027d3;",
+                                                            "localparamP_VER_LEN=6\u0027d4;",
+                                                            "localparamP_VER_VAL=6\u0027d5;",
+                                                            "localparamP_COMM_TAG=6\u0027d6;",
+                                                            "localparamP_COMM_LEN=6\u0027d7;",
+                                                            "localparamP_COMM_VAL=6\u0027d8;",
+                                                            "localparamP_PDU_TAG=6\u0027d9;",
+                                                            "localparamP_PDU_LEN=6\u0027d10;",
+                                                            "localparamP_REQ_TAG=6\u0027d11;",
+                                                            "localparamP_REQ_LEN=6\u0027d12;",
+                                                            "localparamP_REQ_VAL=6\u0027d13;",
+                                                            "localparamP_ERRSTAT_TAG=6\u0027d14;",
+                                                            "localparamP_ERRSTAT_LEN=6\u0027d15;",
+                                                            "localparamP_ERRSTAT_VAL=6\u0027d16;",
+                                                            "localparamP_ERRIDX_TAG=6\u0027d17;",
+                                                            "localparamP_ERRIDX_LEN=6\u0027d18;",
+                                                            "localparamP_ERRIDX_VAL=6\u0027d19;",
+                                                            "localparamP_VBL_TAG=6\u0027d20;",
+                                                            "localparamP_VBL_LEN=6\u0027d21;",
+                                                            "localparamP_VB_TAG=6\u0027d22;",
+                                                            "localparamP_VB_LEN=6\u0027d23;",
+                                                            "localparamP_OID_TAG=6\u0027d24;",
+                                                            "localparamP_OID_LEN=6\u0027d25;",
+                                                            "localparamP_OID_VAL=6\u0027d26;",
+                                                            "localparamP_DONE=6\u0027d27;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_phase=phase;case(phase)P_IDLE:beginif(start)nxt_phase=P_SEQ_TAG;endP_SEQ_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h30)?P_SEQ_LEN:P_DONE;endP_SEQ_LEN:beginif(rx_rd_valid)beginif(len_more==3\u0027d0)beginif(!rx_rd_data[7])nxt_phase=P_VER_TAG;elseif(rx_rd_data[6:0]==7\u0027d0)nxt_phase=P_DONE;endelseif(len_more==3\u0027d1)nxt_phase=P_VER_TAG;endendP_VER_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h02)?P_VER_LEN:P_DONE;endP_VER_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=P_VER_VAL;endP_VER_VAL:beginif(rx_rd_valid)nxt_phase=(remain\u003c=16\u0027d1)?P_COMM_TAG:P_VER_VAL;endP_COMM_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h04)?P_COMM_LEN:P_DONE;endP_COMM_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=(rx_rd_data==8\u0027d0)?P_PDU_TAG:P_COMM_VAL;endP_COMM_VAL:beginif(rx_rd_valid)nxt_phase=(remain\u003c=16\u0027d1)?P_PDU_TAG:P_COMM_VAL;endP_PDU_TAG:beginif(rx_rd_valid)nxt_phase=((rx_rd_data==8\u0027hA0)||(rx_rd_data==8\u0027hA1)||(rx_rd_data==8\u0027hA2)||(rx_rd_data==8\u0027hA3))?P_PDU_LEN:P_DONE;endP_PDU_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=P_REQ_TAG;endP_REQ_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h02)?P_REQ_LEN:P_DONE;endP_REQ_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=P_REQ_VAL;endP_REQ_VAL:beginif(rx_rd_valid)nxt_phase=(remain\u003c=16\u0027d1)?P_ERRSTAT_TAG:P_REQ_VAL;endP_ERRSTAT_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h02)?P_ERRSTAT_LEN:P_DONE;endP_ERRSTAT_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=P_ERRSTAT_VAL;endP_ERRSTAT_VAL:beginif(rx_rd_valid)nxt_phase=(remain\u003c=16\u0027d1)?P_ERRIDX_TAG:P_ERRSTAT_VAL;endP_ERRIDX_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h02)?P_ERRIDX_LEN:P_DONE;endP_ERRIDX_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=P_ERRIDX_VAL;endP_ERRIDX_VAL:beginif(rx_rd_valid)nxt_phase=(remain\u003c=16\u0027d1)?P_VBL_TAG:P_ERRIDX_VAL;endP_VBL_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h30)?P_VBL_LEN:P_DONE;endP_VBL_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=P_VB_TAG;endP_VB_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h30)?P_VB_LEN:P_DONE;endP_VB_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=P_OID_TAG;endP_OID_TAG:beginif(rx_rd_valid)nxt_phase=(rx_rd_data==8\u0027h06)?P_OID_LEN:P_DONE;endP_OID_LEN:beginif(rx_rd_valid\u0026\u0026!rx_rd_data[7])nxt_phase=(rx_rd_data==8\u0027d0)?P_DONE:P_OID_VAL;endP_OID_VAL:beginif(rx_rd_valid\u0026\u0026(remain\u003c=16\u0027d1))nxt_phase=P_DONE;endP_DONE:beginnxt_phase=P_IDLE;enddefault:beginnxt_phase=P_IDLE;endendcaseif((phase!=P_IDLE)\u0026\u0026(phase!=P_DONE)\u0026\u0026(offset_r\u003e=rx_frame_len)\u0026\u0026(rx_frame_len!=16\u0027d0))nxt_phase=P_DONE;end"
+                                                 ],
+                                        "updates":  [
+                                                        "phase\u003c=P_IDLE;",
+                                                        "phase\u003c=nxt_phase;"
+                                                    ],
+                                        "assigns":  [
+                                                        "assignrx_rd_req=(phase!=P_IDLE)\u0026\u0026(phase!=P_DONE)\u0026\u0026(offset_r\u003crx_frame_len);",
+                                                        "assignrx_rd_byte_offset=offset_r;",
+                                                        "assignpdu_valid=pdu_valid_r;",
+                                                        "assignpdu_type=pdu_type_r;",
+                                                        "assignoid=oid_r;",
+                                                        "assigndecode_done=pdu_valid_r;"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "reg[5:0]phase;",
+                                                               "reg[5:0]nxt_phase;"
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "snmp_encoder.v",
+                      "tokenSha256":  "6a527393230cb42bcad1fd34834eca82ddf852b75f76a6a645fcd06e3e0be27c",
+                      "protected":  {
+                                        "header":  "modulesnmp_encoder#(parameterDATA_WIDTH=8,parameterBYTE_OFFSET_WIDTH=11,parameterOID_WIDTH=16)(inputwireclk,inputwirerst_b,inputwireenc_req,inputwire[OID_WIDTH-1:0]oid,inputwire[31:0]value,inputwiretx_wr_gnt,outputwiretx_wr_en,outputwire[BYTE_OFFSET_WIDTH-1:0]tx_wr_byte_offset,outputwire[DATA_WIDTH-1:0]tx_wr_data,outputwireenc_done);",
+                                        "stateParams":  [
+                                                            "localparamS_IDLE=1\u0027b0;",
+                                                            "localparamS_ENCODE=1\u0027b1;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_state=state_r;case(state_r)S_IDLE:beginif(enc_req)nxt_state=S_ENCODE;endS_ENCODE:beginif(tx_wr_gnt\u0026\u0026(byte_cnt==RESP_LEN-8\u0027d1))nxt_state=S_IDLE;enddefault:beginnxt_state=S_IDLE;endendcaseend"
+                                                 ],
+                                        "updates":  [
+                                                        "state_r\u003c=S_IDLE;",
+                                                        "state_r\u003c=nxt_state;"
+                                                    ],
+                                        "assigns":  [
+                                                        "assigntx_wr_en=(state_r==S_ENCODE);",
+                                                        "assigntx_wr_byte_offset={3\u0027b000,byte_cnt};",
+                                                        "assigntx_wr_data=out_byte;",
+                                                        "assignenc_done=done_r;"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "regstate_r;",
+                                                               "regnxt_state;"
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "tftp.v",
+                      "tokenSha256":  "360efe3558ee2713c908acb7b89c3a2983d22a9534f9f24e017992e1897b11ff",
+                      "protected":  {
+                                        "header":  "moduletftp#(parameterDATA_WIDTH=8,parameterBYTE_OFFSET_WIDTH=11)(inputwireclk,inputwirerst_b,inputwirestart,inputwire[15:0]rx_frame_len,outputwirerx_rd_req,outputwire[BYTE_OFFSET_WIDTH-1:0]rx_rd_byte_offset,inputwire[DATA_WIDTH-1:0]rx_rd_data,inputwirerx_rd_valid,outputwiretftp_op_valid,outputwire[1:0]tftp_op_type,outputwire[15:0]tftp_block_num,outputwire[15:0]tftp_data_len,outputwirebuf_wr_en,outputwire[DATA_WIDTH-1:0]buf_wr_data,outputwirebuf_rd_en,inputwire[DATA_WIDTH-1:0]buf_rd_data,inputwirebuf_rd_valid,outputwireflash_wr_req,outputwire[23:0]flash_wr_addr,inputwireflash_wr_done,outputwiretx_wr_en,outputwire[BYTE_OFFSET_WIDTH-1:0]tx_wr_byte_offset,outputwire[DATA_WIDTH-1:0]tx_wr_data,outputwiretx_frame_done,inputwiretx_wr_gnt,outputwireload_busy,outputwireload_done,outputwireload_error);",
+                                        "stateParams":  [
+                                                            "localparamS_IDLE=5\u0027d0;",
+                                                            "localparamS_RD_OP0=5\u0027d1;",
+                                                            "localparamS_RD_OP1=5\u0027d2;",
+                                                            "localparamS_DRAIN=5\u0027d3;",
+                                                            "localparamS_RD_BLOCK0=5\u0027d4;",
+                                                            "localparamS_RD_BLOCK1=5\u0027d5;",
+                                                            "localparamS_RD_DATA=5\u0027d6;",
+                                                            "localparamS_FIFO_RD=5\u0027d7;",
+                                                            "localparamS_FIFO_WAIT=5\u0027d8;",
+                                                            "localparamS_FLASH_REQ=5\u0027d9;",
+                                                            "localparamS_FLASH_WAIT=5\u0027d10;",
+                                                            "localparamS_TX0=5\u0027d11;",
+                                                            "localparamS_TX1=5\u0027d12;",
+                                                            "localparamS_TX2=5\u0027d13;",
+                                                            "localparamS_TX3=5\u0027d14;",
+                                                            "localparamS_ERR=5\u0027d15;"
+                                                        ],
+                                        "comb":  [
+                                                     "always@(*)beginnxt_state=state;case(state)S_IDLE:beginif(start)nxt_state=S_RD_OP0;endS_RD_OP0:beginif(rx_rd_valid)nxt_state=S_RD_OP1;endS_RD_OP1:beginif(rx_rd_valid)beginif((op_lo==8\u0027h00)\u0026\u0026(rx_rd_data==8\u0027h02))nxt_state=(rd_ptr+1\u0027b1\u003e=rx_frame_len)?S_TX0:S_DRAIN;elseif((op_lo==8\u0027h00)\u0026\u0026(rx_rd_data==8\u0027h03))beginif(rx_frame_len\u003c16\u0027d4)nxt_state=(rd_ptr+1\u0027b1\u003e=rx_frame_len)?S_ERR:S_DRAIN;elsenxt_state=S_RD_BLOCK0;endelsenxt_state=(rd_ptr+1\u0027b1\u003e=rx_frame_len)?S_ERR:S_DRAIN;endendS_DRAIN:beginif(rx_rd_valid\u0026\u0026(rd_ptr+1\u0027b1\u003e=rx_frame_len))nxt_state=(post_action==2\u0027d0)?S_TX0:S_ERR;endS_RD_BLOCK0:beginif(rx_rd_valid)nxt_state=S_RD_BLOCK1;endS_RD_BLOCK1:beginif(rx_rd_valid)nxt_state=(data_len_r==16\u0027d0)?S_TX0:S_RD_DATA;endS_RD_DATA:beginif(rx_rd_valid\u0026\u0026(remain_r\u003c=16\u0027d1))nxt_state=S_FIFO_RD;endS_FIFO_RD:beginnxt_state=S_FIFO_WAIT;endS_FIFO_WAIT:beginif(buf_rd_valid)nxt_state=S_FLASH_REQ;endS_FLASH_REQ:beginnxt_state=S_FLASH_WAIT;endS_FLASH_WAIT:beginif(flash_wr_done)nxt_state=(flash_idx_r+16\u0027d1\u003e=data_len_r)?S_TX0:S_FIFO_RD;endS_TX0:beginif(tx_wr_gnt)nxt_state=S_TX1;endS_TX1:beginif(tx_wr_gnt)nxt_state=S_TX2;endS_TX2:beginif(tx_wr_gnt)nxt_state=S_TX3;endS_TX3:beginif(tx_wr_gnt)nxt_state=S_IDLE;endS_ERR:beginnxt_state=S_IDLE;enddefault:beginnxt_state=S_IDLE;endendcaseend"
+                                                 ],
+                                        "updates":  [
+                                                        "state\u003c=S_IDLE;",
+                                                        "state\u003c=nxt_state;"
+                                                    ],
+                                        "assigns":  [
+                                                        "assignrx_rd_req=reading;",
+                                                        "assignrx_rd_byte_offset=rd_ptr;",
+                                                        "assigntx_wr_en=writing_ack;",
+                                                        "assignbuf_wr_en=(state==S_RD_DATA)\u0026\u0026rx_rd_valid;",
+                                                        "assignbuf_wr_data=rx_rd_data;",
+                                                        "assignbuf_rd_en=(state==S_FIFO_RD);",
+                                                        "assignflash_wr_req=(state==S_FLASH_REQ);",
+                                                        "assignflash_wr_addr=flash_base+{8\u0027d0,flash_idx_r};",
+                                                        "assigntx_wr_byte_offset=(state==S_TX0)?11\u0027d0:(state==S_TX1)?11\u0027d1:(state==S_TX2)?11\u0027d2:11\u0027d3;",
+                                                        "assigntx_wr_data=ack_byte;",
+                                                        "assigntx_frame_done=(state==S_TX3)\u0026\u0026tx_wr_gnt;",
+                                                        "assigntftp_op_valid=op_valid_r;",
+                                                        "assigntftp_op_type=(op_lo==8\u0027h00)\u0026\u0026(op_hi==8\u0027h03)?2\u0027d1:2\u0027d0;",
+                                                        "assigntftp_block_num=block_r;",
+                                                        "assigntftp_data_len=data_len_r;",
+                                                        "assignload_busy=busy_r;",
+                                                        "assignload_done=done_r;",
+                                                        "assignload_error=error_r;"
+                                                    ],
+                                        "stateRegisters":  [
+                                                               "reg[4:0]state;",
+                                                               "reg[4:0]nxt_state;"
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "tx_port_buf.v",
+                      "tokenSha256":  "47f2e0a9e1670ae6d6aa4e118151db0d3dbeb3039267b748462e98dc7be3e8d9",
+                      "protected":  {
+                                        "header":  "moduletx_port_buf#(parameterDATA_WIDTH=8,parameterVL_INDEX_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11)(inputwireclk,inputwirerst_b,inputwirewr_en,inputwire[VL_INDEX_WIDTH-1:0]wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]wr_byte_offset,inputwire[DATA_WIDTH-1:0]wr_data,inputwirelen_wr_en,inputwire[VL_INDEX_WIDTH-1:0]len_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]len_byte_offset,inputwirerd_en,inputwire[VL_INDEX_WIDTH-1:0]rd_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]rd_byte_offset,outputwire[DATA_WIDTH-1:0]rd_data,outputwirerd_valid,outputwire[15:0]payload_len,outputwire[15:0]vl_busy,inputwire[15:0]abort_vl);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ],
+                                        "assigns":  [
+
+                                                    ]
+                                    }
+                  },
+                  {
+                      "file":  "tx_wr_arb.v",
+                      "tokenSha256":  "474f0bab7d980ec0ef9a5e223f29350b3632cc25d97906383bcc3b24cc0ffe63",
+                      "protected":  {
+                                        "header":  "moduletx_wr_arb#(parameterVL_INDEX_WIDTH=7,parameterSLOT_WIDTH=4,parameterBYTE_OFFSET_WIDTH=11,parameterDATA_WIDTH=8)(inputwireclk,inputwirerst_b,inputwireapp_wr_req,inputwire[VL_INDEX_WIDTH-1:0]app_wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]app_wr_byte_offset,inputwire[DATA_WIDTH-1:0]app_wr_data,inputwireapp_frame_done,inputwiresnmp_wr_req,inputwire[VL_INDEX_WIDTH-1:0]snmp_wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]snmp_wr_byte_offset,inputwire[DATA_WIDTH-1:0]snmp_wr_data,inputwiresnmp_frame_done,inputwiredl_wr_req,inputwire[VL_INDEX_WIDTH-1:0]dl_wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]dl_wr_byte_offset,inputwire[DATA_WIDTH-1:0]dl_wr_data,inputwiredl_frame_done,inputwirertc_wr_req,inputwire[VL_INDEX_WIDTH-1:0]rtc_wr_vl_index,inputwire[BYTE_OFFSET_WIDTH-1:0]rtc_wr_byte_offset,inputwire[DATA_WIDTH-1:0]rtc_wr_data,inputwirertc_frame_done,outputwirebuf_wr_en,outputwire[SLOT_WIDTH-1:0]buf_wr_vl_index,outputwire[BYTE_OFFSET_WIDTH-1:0]buf_wr_byte_offset,outputwire[DATA_WIDTH-1:0]buf_wr_data,outputwirebuf_len_wr_en,outputwire[SLOT_WIDTH-1:0]buf_len_vl_index,outputwire[BYTE_OFFSET_WIDTH-1:0]buf_len_byte_offset,outputwireapp_wr_gnt,outputwiresnmp_wr_gnt,outputwiredl_wr_gnt,outputwirertc_wr_gnt,inputwire[15:0]vl_busy);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "vl_config_ram.v",
+                      "tokenSha256":  "5851b6b6a4fc7861f487c9f49a0614c581017f50f44c03ebedc206934b248483",
+                      "protected":  {
+                                        "header":  "modulevl_config_ram#(parameterVLID_WIDTH=16,parameterVL_ADDR_WIDTH=12)(inputwireclk_a,inputwirerst_a,inputwire[VL_ADDR_WIDTH-1:0]addr_a,inputwirerd_en_a,outputwire[VLID_WIDTH-1:0]tag_a,outputwirevalid_a,outputwire[1:0]port_type_a,outputwire[15:0]udp_port_a,outputwire[15:0]bag_a,outputwire[15:0]lmax_a,outputwirerm_en_a,outputwireic_mode_a,inputwireclk_b,inputwirerst_b,inputwire[VL_ADDR_WIDTH-1:0]addr_b,inputwirerd_en_b,outputwire[VLID_WIDTH-1:0]tag_b,outputwirevalid_b,outputwire[1:0]port_type_b,outputwire[15:0]udp_port_b,outputwire[15:0]bag_b,outputwire[15:0]lmax_b,outputwirerm_en_b,outputwireic_mode_b,inputwirecfg_wr_en,inputwire[VL_ADDR_WIDTH-1:0]cfg_wr_addr,inputwire[VLID_WIDTH-1:0]cfg_wr_vlid,inputwire[15:0]cfg_wr_udp_port,inputwire[1:0]cfg_wr_port_type,inputwire[15:0]cfg_wr_bag,inputwire[15:0]cfg_wr_lmax,inputwirecfg_wr_rm_en,inputwirecfg_wr_ic_mode);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  },
+                  {
+                      "file":  "vl_state_ram.v",
+                      "tokenSha256":  "74d90b9beec4aa5d3a92344679cc03d9d765ade5ab3be30194139d795fcc27d9",
+                      "protected":  {
+                                        "header":  "modulevl_state_ram#(parameterVL_ADDR_WIDTH=12,parameterSTATE_WIDTH=64)(inputwireclk_a,inputwirerst_a,inputwire[VL_ADDR_WIDTH-1:0]addr_a,inputwirerd_en_a,outputwire[STATE_WIDTH-1:0]rd_data_a,inputwirewr_en_a,inputwire[STATE_WIDTH-1:0]wr_data_a,inputwireclk_b,inputwirerst_b,inputwire[VL_ADDR_WIDTH-1:0]addr_b,inputwirerd_en_b,outputwire[STATE_WIDTH-1:0]rd_data_b,inputwirewr_en_b,inputwire[STATE_WIDTH-1:0]wr_data_b);",
+                                        "stateParams":  [
+
+                                                        ],
+                                        "comb":  [
+
+                                                 ],
+                                        "updates":  [
+
+                                                    ],
+                                        "assigns":  [
+
+                                                    ],
+                                        "stateRegisters":  [
+
+                                                           ]
+                                    }
+                  }
+              ],
+    "vendorFiles":  [
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\file_buffer_ip\\file_buffer_ip.v",
+                            "sha256":  "41d494f33204d8077546ef2e73345d60d0d09cb31d4f7fa1027720cbb076061a"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\file_buffer_ip\\file_buffer_ip.eeo",
+                            "sha256":  "410b6c2fdb16b6849c9090d8e539ee8d1d611ce85b0b68155673c26910398d8a"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\file_table_ip\\file_table_ip.v",
+                            "sha256":  "452c536b1930b39a11284f311f75edae2544d747c8d0d6c7568dec3c9735fe25"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\file_table_ip\\file_table_ip.eeo",
+                            "sha256":  "c62ce37a5b6655faac90abe28d8403a4c742999b21ef755924448bd5cfa616b4"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\mib_rx_ip\\mib_rx_ip.v",
+                            "sha256":  "161e9c9885d8f3851cb28e50ba115f14dd5de4dfaf8bcbe7a995890ffa79ff88"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\mib_rx_ip\\mib_rx_ip.eeo",
+                            "sha256":  "0faaa3956afc187518c687ff1c47a936c10bde9038b57fc6c4a464fee9282081"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\mib_tx_ip\\mib_tx_ip.v",
+                            "sha256":  "6c998ae4a3a58a60a158e35080e935652c8d482805b91033d1a3b42767655ceb"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\mib_tx_ip\\mib_tx_ip.eeo",
+                            "sha256":  "851a45312fd2e2f9c22890a9c5c83a05485d0ae5b04143539dcc0735cc7e650a"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\rx_port_buf_ip\\rx_port_buf_ip.v",
+                            "sha256":  "3f4f3fe9f8c066fd191e7d1b8739cba33bbdda8546aeae9759d4b7394e53e6f1"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\rx_port_buf_ip\\rx_port_buf_ip.eeo",
+                            "sha256":  "47941828942056c499a9fbac5dc3490d856669b252f16ebe613d6ec9c72f1074"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\tx_port_buf_ip\\tx_port_buf_ip.v",
+                            "sha256":  "032ab7c25ed0cca8218c211691f955c2b74e2b6f842e683cd636f8c74df6b5db"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\tx_port_buf_ip\\tx_port_buf_ip.eeo",
+                            "sha256":  "8e043a91dae92807c3f6ddcc3c0bbce1890ea31cfc4cfda40bfb6d8d5d03dafa"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\vl_config_ip\\vl_config_ip.v",
+                            "sha256":  "a122b2b6d3bc5b6d8e8254ade8a3c0cc156a6d84ec709ae912355d691f479b31"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\vl_config_ip\\vl_config_ip.eeo",
+                            "sha256":  "91433d5dc09fafcadc390c96a028e64f345ba105d7dec571a2fa7c82d35fdec7"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\vl_state_ip\\vl_state_ip.v",
+                            "sha256":  "6164f4859dac73e6f2833e851488e7d673d994c4a828a9fe4e32a7cf50161c96"
+                        },
+                        {
+                            "file":  "elinx\\afdx.srcs\\sources_1\\ip\\vl_state_ip\\vl_state_ip.eeo",
+                            "sha256":  "af48e3d3b3c847781ef3cff6157edc7aee1ff24549fb73f437084653b35e2d1c"
+                        }
+                    ]
+}

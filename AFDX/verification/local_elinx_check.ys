@@ -1,0 +1,70 @@
+# eLinx synthesis script (eHiWay eLinx 3.0, Yosys-based)
+# 用途：不开 GUI、不需要跑完整流程，直接检查「我们的 RTL + 生成的 IP」能否被 eLinx 综合前端
+#       读入并解析层次。日常改完 RTL 跑一次（几秒），比开 GUI 快得多。
+# 用法（工作目录必须是本文件所在目录，即工程里的 elinx\）：
+#   & '<eLinx 安装目录>\bin\shell\bin\eLinx_synthesis.exe' -s afdx_synth_check.ys
+
+# ---------- 我们的 RTL（28 个，eLinx 工程里的副本 elinx\rtl） ----------
+read_verilog rtl/local_rtc.v
+read_verilog rtl/rtc_rx.v
+read_verilog rtl/rtc_tx.v
+read_verilog rtl/delay_comp.v
+read_verilog rtl/rtc_sync.v
+read_verilog rtl/snmp_decoder.v
+read_verilog rtl/snmp_encoder.v
+read_verilog rtl/mib_query.v
+read_verilog rtl/snmp_agent.v
+read_verilog rtl/tftp.v
+read_verilog rtl/file_buffer.v
+read_verilog rtl/flash_ctrl.v
+read_verilog rtl/file_table.v
+read_verilog rtl/data_loader_615a.v
+read_verilog rtl/afdx_rx.v
+read_verilog rtl/afdx_tx.v
+read_verilog rtl/config_wr.v
+read_verilog rtl/vl_config_ram.v
+read_verilog rtl/vl_state_ram.v
+read_verilog rtl/mib_ram.v
+read_verilog rtl/rx_port_buf.v
+read_verilog rtl/tx_port_buf.v
+read_verilog rtl/rx_rd_arb.v
+read_verilog rtl/tx_wr_arb.v
+read_verilog rtl/afdx_vl_cfg.v
+read_verilog rtl/afdx_port_buf.v
+read_verilog rtl/afdx_net_rx.v
+read_verilog rtl/AFDX_top.v
+read_verilog rtl/top.v
+
+# ---------- IP 生成器产出的 IP（工程里的 sources_1\ip） ----------
+read_verilog afdx.srcs/sources_1/ip/vl_config_ip/vl_config_ip.v
+read_verilog afdx.srcs/sources_1/ip/vl_state_ip/vl_state_ip.v
+read_verilog afdx.srcs/sources_1/ip/mib_rx_ip/mib_rx_ip.v
+read_verilog afdx.srcs/sources_1/ip/mib_tx_ip/mib_tx_ip.v
+read_verilog afdx.srcs/sources_1/ip/rx_port_buf_ip/rx_port_buf_ip.v
+read_verilog afdx.srcs/sources_1/ip/tx_port_buf_ip/tx_port_buf_ip.v
+read_verilog afdx.srcs/sources_1/ip/file_table_ip/file_table_ip.v
+read_verilog afdx.srcs/sources_1/ip/file_buffer_ip/file_buffer_ip.v
+read_verilog afdx.srcs/sources_1/ip/rx_frame_buf/rx_frame_buf.v
+read_verilog afdx.srcs/sources_1/ip/eth_1/eth_1.v
+read_verilog afdx.srcs/sources_1/ip/eth_2/eth_2.v
+read_verilog afdx.srcs/sources_1/ip/pll/pll.v
+
+# ---------- IP 内部用到的器件原语（按黑盒读入，让层次检查能过） ----------
+# 下面两行的路径来自 eLinx 安装目录（<安装目录>\bin\shell\share\stratix\...），换机器时改这两行
+read_verilog -lib "D:/Program Files (x86)/eHiWay/eLinx3.0/bin/shell/share/stratix/common/m4k.v"
+read_verilog -lib "D:/Program Files (x86)/eHiWay/eLinx3.0/bin/shell/share/stratix/primitive/scfifo.v"
+
+# FIFO IP 的内部是 scfifo 原语，eLinx 的 CLI 综合器会检查一个只在 GUI 里能设的
+# [Optimization Technique] 开关，未设置时直接报 "does not support FIFO"。
+# 这里把它当黑盒（只做端口/层次检查，不展开内部），整条检查链即可跑通。
+blackbox file_buffer_ip
+
+# 双网帧缓存与三片厂商 IP（PLL、两片三速以太网 MAC）内部依赖 eLinx 器件原语和
+# IP 自身实现，CLI 前端检查只验证顶层例化端口与层次，内部按黑盒处理。
+blackbox rx_frame_buf
+blackbox eth_1 eth_2 pll
+
+hierarchy -check -top top
+proc
+opt
+stat

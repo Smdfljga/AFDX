@@ -1,0 +1,8 @@
+cnt_sel,oid,VL_ADDR_WIDTH
+vl_addr,oid,OID_WIDTH
+tbl_sel,oid,OID_WIDTH,VL_ADDR_WIDTH,CNT_WIDTH
+mib_sel,tbl_d2
+mib_addr,query_req,vl_addr,addr_r
+mib_rd_en,query_req,!rst_b
+query_done,rq_d3
+query_value,value_r
