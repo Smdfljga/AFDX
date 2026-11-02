@@ -1,1 +1,19 @@
-﻿sim/
+# FPGA synthesis / place-and-route output, not source code
+*.runs/
+db/
+incremental_db/
+
+# Simulation build output; keep testbench and driver source files
+/sim/**/work/
+/sim/**/_build/
+*.qdb
+*.qpg
+*.qtl
+*.wlf
+*.log
+transcript
+vsim_stacktrace.vstf
+
+# Local editor / operating system files
+.DS_Store
+Thumbs.db
