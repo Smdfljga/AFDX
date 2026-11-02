@@ -1,0 +1,5 @@
+rx_rd_req,state,S_RD,rd_ptr,rx_frame_len
+rx_rd_byte_offset,rd_ptr,!rst_b
+master_ts,master_r
+delay_val,delay_r
+rx_valid,state,S_DONE

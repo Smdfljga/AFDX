@@ -1,0 +1,16 @@
+wr_offset,wr_queue_mode,wr_ptr,wr_vl_index,wr_byte_offset,wr_byte_offset,BYTE_OFFSET_WIDTH
+rd_offset,rd_ptr,rd_vl_index,rd_byte_offset,VL_INDEX_WIDTH,BYTE_OFFSET_WIDTH
+wr_addr,wr_vl_index,wr_offset,VL_INDEX_WIDTH,BYTE_OFFSET_WIDTH
+rd_addr,rd_vl_index,rd_offset
+rd_valid,rd_en_d
+pointers_equal,wr_ptr,wr_vl_index,rd_ptr,wr_vl_index,BYTE_OFFSET_WIDTH
+used_current,frame_cnt,wr_vl_index,pointers_equal,SLOT_BYTES,wr_ptr,wr_vl_index,rd_ptr,wr_vl_index,wr_ptr,wr_vl_index,rd_ptr,wr_vl_index,SLOT_BYTES,rd_ptr,wr_vl_index,wr_ptr,wr_vl_index,BYTE_OFFSET_WIDTH
+free_current,SLOT_BYTES,used_current
+wr_full,wr_frame_len,SLOT_BYTES,wr_queue_mode,frame_cnt,wr_vl_index,MAX_FRAMES,wr_frame_len,free_current,FRAME_LEN_WIDTH
+head_len,len_fifo,rd_vl_index,fifo_rd_ptr,rd_vl_index
+sample_restart,wr_en,!wr_queue_mode,wr_byte_offset,wr_vl_index,rd_vl_index
+sample_commit,wr_frame_done,!wr_queue_mode,wr_vl_index,rd_vl_index
+enqueue_now,wr_frame_done,wr_queue_mode,!wr_full
+dequeue_now,queue_mode,rd_vl_index,rd_en,frame_cnt,rd_vl_index,head_len,rd_byte_offset,rd_progress,rd_vl_index,!sample_restart,!sample_commit,rd_byte_offset,head_len,!rst_b,!wr_queue_mode,!wr_queue_mode,!wr_full,!sample_restart,!sample_commit
+,
+,

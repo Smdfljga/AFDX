@@ -1,0 +1,4 @@
+tx_wr_en,state,S_SEND
+tx_wr_byte_offset,wr_ptr
+tx_wr_data,out_data_r
+tx_frame_done,state,S_SEND,tx_wr_gnt,wr_ptr

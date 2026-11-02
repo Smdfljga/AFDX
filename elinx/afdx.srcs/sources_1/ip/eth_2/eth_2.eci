@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:design xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
+    <spirit:vendor>eHiway</spirit:vendor>
+    <spirit:componentInstances>
+        <spirit:componentInstance>
+            <spirit:instanceName>eth_2</spirit:instanceName>
+            <spirit:name>TripleSpeedEthernet</spirit:name>
+            <spirit:type></spirit:type>
+            <spirit:fileset>
+                <spirit:file>F:/bigfatfish/AFDX/elinx/afdx.srcs/sources_1/ip/eth_2/eth_2.v</spirit:file>
+            </spirit:fileset>
+            <spirit:configurableElementValues>
+                <spirit:configurableElementValue spirit:referenceId="SeriesName">eHiChip6</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="IPName">TripleSpeedEthernet</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="version">21839</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="Interface">0</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="HalfDuplex">ON</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="Loopback">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="Unicast">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="IncludeCounter">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="64counter">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="Multicast">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="32boundary">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="flowCtrl">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="VLAN">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="Magic">OFF</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="MDIO">ON</spirit:configurableElementValue>
+                <spirit:configurableElementValue spirit:referenceId="Divisor">40</spirit:configurableElementValue>
+            </spirit:configurableElementValues>
+        </spirit:componentInstance>
+    </spirit:componentInstances>
+</spirit:design>

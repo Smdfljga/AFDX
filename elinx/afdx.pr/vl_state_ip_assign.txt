@@ -1,0 +1,2 @@
+q_a,sub_wire0
+q_b,sub_wire1

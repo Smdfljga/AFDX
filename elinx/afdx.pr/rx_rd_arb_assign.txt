@@ -1,0 +1,12 @@
+app_gnt,app_rd_req
+snmp_gnt,~app_rd_req,snmp_rd_req,!snmp_v
+dl_gnt,~app_rd_req,~snmp_rd_req,dl_rd_req,!dl_v
+rtc_gnt,~app_rd_req,~snmp_rd_req,~dl_rd_req,rtc_rd_req,!rtc_v
+buf_rd_en,app_gnt,snmp_gnt,dl_gnt,rtc_gnt
+buf_rd_vl_index,app_gnt,app_rd_vl_index,snmp_gnt,snmp_rd_vl_index,dl_gnt,dl_rd_vl_index,rtc_rd_vl_index
+buf_rd_byte_offset,app_gnt,app_rd_byte_offset,snmp_gnt,snmp_rd_byte_offset,dl_gnt,dl_rd_byte_offset,rtc_rd_byte_offset
+rd_data,buf_rd_data,!rst_b
+app_rd_valid,app_v
+snmp_rd_valid,snmp_v
+dl_rd_valid,dl_v
+rtc_rd_valid,rtc_v

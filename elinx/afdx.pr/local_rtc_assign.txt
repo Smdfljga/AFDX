@@ -1,0 +1,2 @@
+rtc_value,rtc_r
+rtc_tick,!sync_en,sync_period_ms,us_cnt,US_DIV,us_in_ms,ms_cnt,sync_period_ms

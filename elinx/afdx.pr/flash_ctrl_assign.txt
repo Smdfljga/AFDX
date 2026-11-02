@@ -1,0 +1,5 @@
+flash_erase,state,S_ERASE
+flash_wr_en,state,S_WRITE
+flash_wr_addr,addr_r
+flash_wr_data,data_r
+wr_done,state,S_WRITE

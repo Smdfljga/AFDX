@@ -1,0 +1,36 @@
+# vsim -c -onfinish exit -l F:\bigfatfish\AFDX\sim\jointsim\_build\tb_joint_app_rx.log work.tb_joint_app_rx -do "run 30 ms; quit -code 3" 
+# Start time: 16:36:22 on Oct 23,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# //  ModelSim SE-64 2020.4 Oct 13 2020
+# //
+# //  Copyright 1991-2020 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  ModelSim SE-64 and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading work.tb_joint_app_rx(fast)
+# run 30 ms
+# === 采样端口：单帧读回 ===
+#   [PASS] cnt = 1
+#   [PASS] len = 17
+# === 采样端口：第二帧覆盖 ===
+#   [PASS] cnt = 1
+# === 队列端口：两帧依次读回并出队 ===
+#   [PASS] cnt = 2
+#   [PASS] cnt = 1 after dequeue
+#   [PASS] cnt = 0 after dequeue
+# === 异常帧丢弃 ===
+#   [PASS] wrong UDP port dropped
+#   [PASS] short frame dropped
+#   [PASS] mac error frame dropped
+# PASS: joint app rx chain
+# ** Note: $finish    : F:/bigfatfish/AFDX/sim/jointsim/tb_joint_app_rx.v(311)
+#    Time: 6924 ns  Iteration: 1  Instance: /tb_joint_app_rx
+# End time: 16:36:22 on Oct 23,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

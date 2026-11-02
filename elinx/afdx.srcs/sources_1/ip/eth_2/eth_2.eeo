@@ -1,0 +1,46 @@
+// The following must be inserted into your Verilog file for this
+// core to be instantiated. Change the instance name and port connections
+// (in parentheses) to your own signal names.
+
+//----------- Begin Cut here for INSTANTIATION Template ---//INST_TAG
+eth_2 your_instance_name (
+		.mdc(mdc),                      //output      mdc
+		.phy_rstb0(phy_rstb0),          //output      phy_rstb0
+		.p0_gtxc(p0_gtxc),              //output      p0_gtxc
+		.p0_txd(p0_txd),                //output[7:0] p0_txd
+		.p0_txen(p0_txen),              //output      p0_txen
+		.p0_txer(p0_txer),              //output      p0_txer
+		.ff_tx_rdy(ff_tx_rdy),          //output      ff_tx_rdy
+		.ff_tx_al_full(ff_tx_al_full),  //output      ff_tx_al_full
+		.ff_rx_data_vld(ff_rx_data_vld),//output      ff_rx_data_vld
+		.ff_rx_sop(ff_rx_sop),          //output      ff_rx_sop
+		.ff_rx_eop(ff_rx_eop),          //output      ff_rx_eop
+		.ff_rx_data(ff_rx_data),        //output[7:0] ff_rx_data
+		.ff_rx_err(ff_rx_err),          //output      ff_rx_err
+		.reg_data_out(reg_data_out),    //output[31:0] reg_data_out
+		.reg_acc_bsy(reg_acc_bsy),      //output      reg_acc_bsy
+		.mdio(mdio),                    //inout       mdio
+		.clk_sys(clk_sys),              //input       clk_sys
+		.rst_b(rst_b),                  //input       rst_b
+		.p0_txc(p0_txc),                //input       p0_txc
+		.p0_rxc(p0_rxc),                //input       p0_rxc
+		.p0_rxd(p0_rxd),                //input [7:0] p0_rxd
+		.p0_rxdv(p0_rxdv),              //input       p0_rxdv
+		.p0_rxer(p0_rxer),              //input       p0_rxer
+		.p0_col(p0_col),                //input       p0_col
+		.p0_crs(p0_crs),                //input       p0_crs
+		.ff_tx_clk(ff_tx_clk),          //input       ff_tx_clk
+		.ff_tx_data(ff_tx_data),        //input [7:0] ff_tx_data
+		.ff_tx_sop(ff_tx_sop),          //input       ff_tx_sop
+		.ff_tx_eop(ff_tx_eop),          //input       ff_tx_eop
+		.ff_tx_err(ff_tx_err),          //input       ff_tx_err
+		.ff_tx_wren(ff_tx_wren),        //input       ff_tx_wren
+		.ff_rx_clk(ff_rx_clk),          //input       ff_rx_clk
+		.ff_rx_rdy(ff_rx_rdy),          //input       ff_rx_rdy
+		.reg_wr(reg_wr),                //input       reg_wr
+		.reg_rd(reg_rd),                //input       reg_rd
+		.reg_addr(reg_addr),            //input [3:0] reg_addr
+		.reg_data_in(reg_data_in)       //input [31:0] reg_data_in
+);
+
+// INST_TAG_END ------ End INSTANTIATION Template ---------

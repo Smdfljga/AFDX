@@ -1,0 +1,16 @@
+tag_a,q_a
+valid_a,q_a
+port_type_a,q_a
+udp_port_a,q_a
+bag_a,q_a
+lmax_a,q_a
+rm_en_a,q_a
+ic_mode_a,q_a
+tag_b,q_b
+valid_b,q_b
+port_type_b,q_b
+udp_port_b,q_b
+bag_b,q_b
+lmax_b,q_b
+rm_en_b,q_b
+ic_mode_b,q_b

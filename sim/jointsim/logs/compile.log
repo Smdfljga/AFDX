@@ -1,0 +1,60 @@
+﻿Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+Start time: 16:36:19 on Oct 23,2026
+vlog -work work F:\bigfatfish\AFDX\sim\ip_sim_models.v F:\bigfatfish\AFDX\elinx\rtl\afdx_net_rx.v F:\bigfatfish\AFDX\elinx\rtl\afdx_port_buf.v F:\bigfatfish\AFDX\elinx\rtl\afdx_rx.v F:\bigfatfish\AFDX\elinx\rtl\AFDX_top.v F:\bigfatfish\AFDX\elinx\rtl\afdx_tx.v F:\bigfatfish\AFDX\elinx\rtl\afdx_vl_cfg.v F:\bigfatfish\AFDX\elinx\rtl\config_wr.v F:\bigfatfish\AFDX\elinx\rtl\data_loader_615a.v F:\bigfatfish\AFDX\elinx\rtl\delay_comp.v F:\bigfatfish\AFDX\elinx\rtl\file_buffer.v F:\bigfatfish\AFDX\elinx\rtl\file_table.v F:\bigfatfish\AFDX\elinx\rtl\flash_ctrl.v F:\bigfatfish\AFDX\elinx\rtl\local_rtc.v F:\bigfatfish\AFDX\elinx\rtl\mib_query.v F:\bigfatfish\AFDX\elinx\rtl\mib_ram.v F:\bigfatfish\AFDX\elinx\rtl\rtc_rx.v F:\bigfatfish\AFDX\elinx\rtl\rtc_sync.v F:\bigfatfish\AFDX\elinx\rtl\rtc_tx.v F:\bigfatfish\AFDX\elinx\rtl\rx_port_buf.v F:\bigfatfish\AFDX\elinx\rtl\rx_rd_arb.v F:\bigfatfish\AFDX\elinx\rtl\snmp_agent.v F:\bigfatfish\AFDX\elinx\rtl\snmp_decoder.v F:\bigfatfish\AFDX\elinx\rtl\snmp_encoder.v F:\bigfatfish\AFDX\elinx\rtl\tftp.v F:\bigfatfish\AFDX\elinx\rtl\tx_port_buf.v F:\bigfatfish\AFDX\elinx\rtl\tx_wr_arb.v F:\bigfatfish\AFDX\elinx\rtl\vl_config_ram.v F:\bigfatfish\AFDX\elinx\rtl\vl_state_ram.v F:\bigfatfish\AFDX\sim\jointsim\tb_joint_615a.v F:\bigfatfish\AFDX\sim\jointsim\tb_joint_app_rx.v F:\bigfatfish\AFDX\sim\jointsim\tb_joint_app_tx.v F:\bigfatfish\AFDX\sim\jointsim\tb_joint_cfg.v F:\bigfatfish\AFDX\sim\jointsim\tb_joint_dualnet.v F:\bigfatfish\AFDX\sim\jointsim\tb_joint_ic_rm.v F:\bigfatfish\AFDX\sim\jointsim\tb_joint_rtc.v F:\bigfatfish\AFDX\sim\jointsim\tb_joint_snmp.v 
+-- Compiling module vl_config_ip
+-- Compiling module vl_state_ip
+-- Compiling module mib_rx_ip
+-- Compiling module mib_tx_ip
+-- Compiling module rx_port_buf_ip
+-- Compiling module tx_port_buf_ip
+-- Compiling module file_table_ip
+-- Compiling module rx_frame_buf
+-- Compiling module file_buffer_ip
+-- Compiling module afdx_net_rx
+-- Compiling module afdx_port_buf
+-- Compiling module afdx_rx
+-- Compiling module AFDX_top
+-- Compiling module afdx_tx
+-- Compiling module afdx_vl_cfg
+-- Compiling module config_wr
+-- Compiling module data_loader_615a
+-- Compiling module delay_comp
+-- Compiling module file_buffer
+-- Compiling module file_table
+-- Compiling module flash_ctrl
+-- Compiling module local_rtc
+-- Compiling module mib_query
+-- Compiling module mib_ram
+-- Compiling module rtc_rx
+-- Compiling module rtc_sync
+-- Compiling module rtc_tx
+-- Compiling module rx_port_buf
+-- Compiling module rx_rd_arb
+-- Compiling module snmp_agent
+-- Compiling module snmp_decoder
+-- Compiling module snmp_encoder
+-- Compiling module tftp
+-- Compiling module tx_port_buf
+-- Compiling module tx_wr_arb
+-- Compiling module vl_config_ram
+-- Compiling module vl_state_ram
+-- Compiling module tb_joint_615a
+-- Compiling module tb_joint_app_rx
+-- Compiling module tb_joint_app_tx
+-- Compiling module tb_joint_cfg
+-- Compiling module tb_joint_dualnet
+-- Compiling module tb_joint_ic_rm
+-- Compiling module tb_joint_rtc
+-- Compiling module tb_joint_snmp
+
+Top level modules:
+	tb_joint_615a
+	tb_joint_app_rx
+	tb_joint_app_tx
+	tb_joint_cfg
+	tb_joint_dualnet
+	tb_joint_ic_rm
+	tb_joint_rtc
+	tb_joint_snmp
+End time: 16:36:20 on Oct 23,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0

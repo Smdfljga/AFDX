@@ -1,0 +1,7 @@
+final_seg,arc_valid,arc_acc,rx_rd_data,rx_rd_data
+rx_rd_req,phase,P_IDLE,phase,P_DONE,offset_r,rx_frame_len
+rx_rd_byte_offset,offset_r,!rst_b
+pdu_valid,pdu_valid_r
+pdu_type,pdu_type_r
+oid,oid_r
+decode_done,pdu_valid_r

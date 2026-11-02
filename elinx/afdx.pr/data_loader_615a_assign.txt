@@ -1,0 +1,1 @@
+buf_rd_valid,fifo_rd_valid_r

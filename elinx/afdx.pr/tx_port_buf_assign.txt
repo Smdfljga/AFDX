@@ -1,0 +1,6 @@
+wr_addr,wr_vl_index,wr_byte_offset,VL_INDEX_WIDTH,BYTE_OFFSET_WIDTH
+rd_addr,rd_vl_index,rd_byte_offset
+payload_len,payload_len_reg,rd_vl_index
+read_last,rd_en,payload_len,rd_byte_offset,payload_len,!rst_b,!rst_b
+rd_valid,rd_en_d,!rst_b
+vl_busy,busy_r

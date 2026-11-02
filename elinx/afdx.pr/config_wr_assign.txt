@@ -1,0 +1,5 @@
+is_sentinel,cfg_wr_en,cfg_wr_vlid,!rst_b,VL_ADDR_WIDTH
+wr_addr,cfg_wr_vlid,VL_ADDR_WIDTH
+bram_wr_en,cfg_wr_en,~is_sentinel
+bram_wr_addr,wr_addr
+cfg_done,done_r,is_sentinel

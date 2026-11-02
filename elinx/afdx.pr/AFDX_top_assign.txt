@@ -1,0 +1,3 @@
+rx_frame_net_sel,REDUNDANCY_EN,rx_frame_net
+app_frame_done,app_tx_req,app_data_written,app_wr_vl_index,app_wr_gnt,!rst_b
+app_rd_data,rx_rd_data_bus

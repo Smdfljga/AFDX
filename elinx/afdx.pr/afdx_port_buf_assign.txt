@@ -1,0 +1,8 @@
+app_rd_frame_len,rx_frame_len_all,app_rd_vl_index
+app_rd_frame_cnt,rx_frame_cnt_all,app_rd_vl_index
+snmp_rd_frame_len,rx_frame_len_all,VL_INDEX_SNMP
+snmp_rd_frame_cnt,rx_frame_cnt_all,VL_INDEX_SNMP
+dl_rd_frame_len,rx_frame_len_all,VL_INDEX_615A
+dl_rd_frame_cnt,rx_frame_cnt_all,VL_INDEX_615A
+rtc_rd_frame_len,rx_frame_len_all,VL_INDEX_RTC
+rtc_rd_frame_cnt,rx_frame_cnt_all,VL_INDEX_RTC

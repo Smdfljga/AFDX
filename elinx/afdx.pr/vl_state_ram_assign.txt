@@ -1,0 +1,2 @@
+rd_data_a,tx_valid_a,tx_word_a,rx_valid_a,rx_word_a
+rd_data_b,tx_valid_b,tx_word_b,rx_valid_b,rx_word_b

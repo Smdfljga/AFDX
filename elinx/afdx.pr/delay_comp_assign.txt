@@ -1,0 +1,4 @@
+proc_delay_us,rx_process_delay,RTC_WIDTH
+sum,master_ts,delay_val,proc_delay_us,RTC_WIDTH,!rst_b
+corrected_ts,corrected_r
+calc_done,done_r

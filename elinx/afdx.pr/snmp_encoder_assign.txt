@@ -1,0 +1,4 @@
+tx_wr_en,state_r,S_ENCODE
+tx_wr_byte_offset,byte_cnt
+tx_wr_data,out_byte
+enc_done,done_r

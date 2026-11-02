@@ -1,0 +1,2 @@
+local_rtc,rtc_value,!rst_b
+rtc_sync_valid,calc_done

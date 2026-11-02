@@ -1,0 +1,21 @@
+// The following must be inserted into your Verilog file for this
+// core to be instantiated. Change the instance name and port connections
+// (in parentheses) to your own signal names.
+
+//----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
+vl_config_ip your_instance_name (
+	.clock_a(clock_a)					,//input clock_a
+	.clock_b(clock_b)					,//input clock_b
+	.aclr_a(aclr_a)					,//input aclr_a
+	.aclr_b(aclr_b)					,//input aclr_b
+	.data_a(data_a)						,//input [127:0] data_a
+	.data_b(data_b)						,//input [127:0] data_b
+	.address_b(address_b)				,//input [11:0] address_b
+	.address_a(address_a)				,//input [11:0] address_a
+	.wren_a(wren_a)						,//input wren_a
+	.wren_b(wren_b)						,//input wren_b
+	.q_a(q_a)							,//output [127:0] q_a
+	.q_b(q_b)							//output [127:0] q_b
+);
+
+// INST_TAG_END ------ End INSTANTIATION Template ---------

@@ -1,0 +1,16 @@
+slot_free0,tog_r,ack_toggle
+slot_free1,tog_r,ack_toggle
+any_free,slot_free0,slot_free1
+wr_en,q_vld,busy,!drop,q_sop,busy,any_free
+wr_first,q_vld,!busy,q_sop
+wr_slot,wr_first,slot_free0,cur_slot,SLOT_BITS
+wr_off_sel,wr_first,SLOT_BITS,wr_off,SLOT_BITS
+wr_off_nxt,wr_off
+over_len,wr_off_nxt,MAX_FRAME,wr_off_nxt,SLOT_BYTES
+ram_wr_en,wr_en
+ram_wr_addr,wr_slot,wr_off_sel
+ram_wr_data,q_data
+wr_toggle,tog_r
+slot_len0,len_rx
+slot_len1,len_rx
+slot_err,err_r,!rst_b,!busy,!drop,!over_len
